@@ -113,5 +113,4 @@ CREATE INDEX fki_track_user
 
 
 INSERT INTO public.user (id, name) VALUES ('ce0cc444-9bb6-4092-a6f0-a7838ad98000', 'panchenkodp');
-
 INSERT INTO public.device (id, userid, name) VALUES ('ce0cc444-9bb6-4092-a6f0-a7838ad98221', 'ce0cc444-9bb6-4092-a6f0-a7838ad98000', 'panchenkodp-pc');
