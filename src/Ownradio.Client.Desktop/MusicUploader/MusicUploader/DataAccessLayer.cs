@@ -101,7 +101,7 @@ namespace OwnRadio.DesktopPlayer
 			return files;
 		}
 
-        // Помечает в БД файлы как загруженные
+		// Помечает в БД файлы как загруженные
 		internal bool markAsUploaded(MusicFile musicFile)
 		{
 			// Открываем соединение
