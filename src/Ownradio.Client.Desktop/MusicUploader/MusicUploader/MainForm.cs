@@ -6,10 +6,10 @@ namespace OwnRadio.DesktopPlayer
 {
 	public partial class MainForm : Form
 	{
-		MusicUploaderPresenter formLogic;           // Контроллер
-        public delegate void afterUploadActions();  // Делегат для обратного вызова по окончании загрузки
+		MusicUploaderPresenter formLogic;		   // Контроллер
+		public delegate void afterUploadActions();  // Делегат для обратного вызова по окончании загрузки
 
-        public MainForm()
+		public MainForm()
 		{
 			InitializeComponent();
 			// Инициализируем логику
@@ -60,18 +60,18 @@ namespace OwnRadio.DesktopPlayer
 			formLogic.uploadMusicFilesAsync(new afterUploadActions(afterUpload));
 		}
 
-        // Действия по завершении загрузки
-        public void afterUpload()
-        {
-            // Обновляем список файлов в форме
-            loadData();
-            // Возобновляем возможность нажимать кнопку загрузки, если есть что загружать.
-            toolStripButtonUpload.Enabled = (listViewFiles.Items.Count > 0);
-            MessageBox.Show("Загрузка завершена!", "Операция выполнена");
-        }
+		// Действия по завершении загрузки
+		public void afterUpload()
+		{
+			// Обновляем список файлов в форме
+			loadData();
+			// Возобновляем возможность нажимать кнопку загрузки, если есть что загружать.
+			toolStripButtonUpload.Enabled = (listViewFiles.Items.Count > 0);
+			MessageBox.Show("Загрузка завершена!", "Операция выполнена");
+		}
 
-        // Вызов формы настроек
-        private void toolStripButtonSettings_Click(object sender, EventArgs e)
+		// Вызов формы настроек
+		private void toolStripButtonSettings_Click(object sender, EventArgs e)
 		{
 			var settingsForm = new SettingsForm();
 			settingsForm.settings = formLogic.settings;

@@ -15,7 +15,7 @@ namespace OwnRadio.DesktopPlayer
 		public Settings settings;						// Настройки программы
 		public List<MusicFile> uploadQueue;				// Очередь загрузки
 
-        public MusicUploaderPresenter()
+		public MusicUploaderPresenter()
 		{
 			// Получаем настройки
 			settings = new Settings();
@@ -70,8 +70,8 @@ namespace OwnRadio.DesktopPlayer
 				getMusicFiles(directory, ref filenames);
 		}
 
-        // Загружает файлы на сервер асинхронно
-        public async void uploadMusicFilesAsync(MainForm.afterUploadActions afterUploadActions)
+		// Загружает файлы на сервер асинхронно
+		public async void uploadMusicFilesAsync(MainForm.afterUploadActions afterUploadActions)
 		{
 			//Создаем новый объект потока для функции загрузки файлов
 			var uploaded = await Task.Factory.StartNew(() => uploadFiles());
@@ -80,9 +80,9 @@ namespace OwnRadio.DesktopPlayer
 			{
 				uploadQueue.Remove(item);
 			}
-            // Выполняем действия на форме по завершении загрузки
-            afterUploadActions();
-        }
+			// Выполняем действия на форме по завершении загрузки
+			afterUploadActions();
+		}
 
 		// Загрузка музыкальных файлов на сервер
 		private List<MusicFile> uploadFiles()
