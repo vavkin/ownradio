@@ -92,17 +92,23 @@ namespace OwnRadio.DesktopPlayer
 			{
 				foreach (var musicFile in uploadQueue)
 				{
-					HttpClient httpClient = new HttpClient();
+					// Формируем полный путь к файлу
 					var fullFileName = musicFile.filePath + "\\" + musicFile.fileName;
+					// Открываем файловый поток
 					var fileStream = File.Open(fullFileName, FileMode.Open);
+					// Получаем информацию о файле
 					var fileInfo = new FileInfo(fullFileName);
 					FileUploadResult uploadResult = null;
 					bool fileUploaded = false;
+					// создаем контент
 					var content = new MultipartFormDataContent();
+					// добавляем в контент файловый поток
 					content.Add(new StreamContent(fileStream), "\"file\"", string.Format("\"{0}\"", musicFile.fileGuid)// fileInfo.Name)
 					);
 					content.Headers.Add("userId", settings.userId);
-
+					// Создаем http клиент
+					HttpClient httpClient = new HttpClient();
+					// Делаем асинхронный POST запрос для передачи файла
 					Task taskUpload = httpClient.PostAsync(settings.serverAddress + "api/upload", content).ContinueWith(task =>
 					{
 						if (task.Status == TaskStatus.RanToCompletion)
@@ -118,10 +124,11 @@ namespace OwnRadio.DesktopPlayer
 
 						fileStream.Dispose();
 					});
-
+					// ждем завершения загрузки
 					taskUpload.Wait();
 					if (fileUploaded)
 					{
+						// добавляем в БД на сервере информацию о загруженном файле
 						var b = updateFileInfo(musicFile.fileGuid.ToString(), musicFile.fileName, musicFile.filePath);
 						if (b.Result)
 						{
@@ -139,13 +146,18 @@ namespace OwnRadio.DesktopPlayer
 			return uploaded;
 		}
 
-		// Обновить на сервере информацию о файле (добавить в БД)
+		// Добавляет в БД на сервере информацию о файле
 		private async Task<bool> updateFileInfo(string id, string fileName, string path)
 		{
+			// Создаем http клиент
 			var client = new HttpClient();
+			// Задаем адрес сервера
 			client.BaseAddress = new Uri(settings.serverAddress);
+			// В локальном пути подменяем символы "\" и "." для корректной работы GET запроса
 			var localPath = path.Substring(3).Replace('\\', '|').Replace('.', '_');
+			// В имени файла подменяем точку для корректной работы GET запроса
 			var file = fileName.Replace('.', '_');
+			// Выполняем асинхронный GET запрос
 			var result = await client.GetAsync("api/upload/" + id + "," + file + "," + localPath + "," + settings.userId);
 			client.Dispose();
 			return result.StatusCode.Equals(HttpStatusCode.OK);
