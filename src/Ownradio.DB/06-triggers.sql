@@ -1,0 +1,1 @@
+--\i 'triggers/<name>.sql'

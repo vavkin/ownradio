@@ -1,0 +1,1 @@
+--\i 'constraints/<name>.sql'

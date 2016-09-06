@@ -1,0 +1,1 @@
+--\i 'functions/<name>.sql'

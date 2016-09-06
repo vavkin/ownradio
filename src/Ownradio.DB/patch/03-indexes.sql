@@ -1,0 +1,1 @@
+--\i 'indexes/<name>.sql'
