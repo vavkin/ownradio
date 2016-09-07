@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,74 +18,103 @@ namespace OwnRadio.DesktopPlayer
 		public Settings settings;
 		// Очередь загрузки
 		public List<MusicFile> uploadQueue;
+		private Logger log;
 
-		public MusicUploaderPresenter()
+		public MusicUploaderPresenter(Logger logger)
 		{
-			// Получаем настройки
-			settings = new Settings();
-			// Слой доступа к данным
-			dal = new DataAccessLayer(settings);
-			// загружаем сохраненную очередь
-			uploadQueue = dal.getNotUploaded();
-
+			log = logger;
+			try
+			{
+				// Получаем настройки
+				settings = new Settings(log);
+				// Слой доступа к данным
+				dal = new DataAccessLayer(settings, log);
+				// загружаем сохраненную очередь
+				uploadQueue = dal.getNotUploaded();
+			}
+			catch (Exception ex)
+			{
+				log.Error(ex);
+			}
 		}
 
 		// Получает список файлов из папки и добавляет их в очередь загрузки
 		public void getQueue(string path)
 		{
-			if (!string.IsNullOrEmpty(path))
+			try
 			{
-				// получаем список файлов
-				List<string> filenames = new List<string>();
-				getMusicFiles(path, ref filenames);
-				// заполняем ListView файлами
-				foreach (var file in filenames)
+				if (!string.IsNullOrEmpty(path))
 				{
-					// Создаем объект - файл
-					var musicFile = new MusicFile();
-					// Получаем имя файла
-					musicFile.fileName = Path.GetFileName(file);
-					// Получаем относительный путь
-					musicFile.filePath = Path.GetDirectoryName(file);
-					// Присваиваем файлу идентификатор
-					musicFile.fileGuid = Guid.NewGuid();
-					if (dal.addToQueue(musicFile) > 0)
+					// получаем список файлов
+					List<string> filenames = new List<string>();
+					getMusicFiles(path, ref filenames);
+					// заполняем ListView файлами
+					foreach (var file in filenames)
 					{
-						// Добавляем файл в очередь
-						uploadQueue.Add(musicFile);
+						// Создаем объект - файл
+						var musicFile = new MusicFile();
+						// Получаем имя файла
+						musicFile.fileName = Path.GetFileName(file);
+						// Получаем относительный путь
+						musicFile.filePath = Path.GetDirectoryName(file);
+						// Присваиваем файлу идентификатор
+						musicFile.fileGuid = Guid.NewGuid();
+						if (dal.addToQueue(musicFile) > 0)
+						{
+							// Добавляем файл в очередь
+							uploadQueue.Add(musicFile);
+						}
 					}
 				}
+			}
+			catch (Exception ex)
+			{
+				log.Error(ex);
 			}
 		}
 
 		// Получает список файлов из дирректории рекурсивно
 		private void getMusicFiles(string sourceDirectory, ref List<string> filenames)
 		{
-			var allFiles = Directory.EnumerateFiles(sourceDirectory);
-			// Оставляем только mp3
-			var musicFiles = allFiles.Where(s => s.Split('.')[s.Split('.').Count() - 1].ToLower().Equals("mp3"));
-			// добавляем все mp3 файлы в список
-			filenames.AddRange(musicFiles);
+			try
+			{
+				var allFiles = Directory.EnumerateFiles(sourceDirectory);
+				// Оставляем только mp3
+				var musicFiles = allFiles.Where(s => s.Split('.')[s.Split('.').Count() - 1].ToLower().Equals("mp3"));
+				// добавляем все mp3 файлы в список
+				filenames.AddRange(musicFiles);
 
-			// получаем список папок в текущей папке
-			var dirs = Directory.EnumerateDirectories(sourceDirectory);
-			// рекурсивно получаем список файлов и проходим вложенные папки
-			foreach (var directory in dirs)
-				getMusicFiles(directory, ref filenames);
+				// получаем список папок в текущей папке
+				var dirs = Directory.EnumerateDirectories(sourceDirectory);
+				// рекурсивно получаем список файлов и проходим вложенные папки
+				foreach (var directory in dirs)
+					getMusicFiles(directory, ref filenames);
+			}
+			catch (Exception ex)
+			{
+				log.Error(ex);
+			}
 		}
 
 		// Загружает файлы на сервер асинхронно
 		public async void uploadMusicFilesAsync(MainForm.afterUploadActions afterUploadActions)
 		{
-			//Создаем новый объект потока для функции загрузки файлов
-			var uploaded = await Task.Factory.StartNew(() => uploadFiles());
-			// Удаляем из списка загруженное
-			foreach (var item in uploaded)
+			try
 			{
-				uploadQueue.Remove(item);
+				//Создаем новый объект потока для функции загрузки файлов
+				var uploaded = await Task.Factory.StartNew(() => uploadFiles());
+				// Удаляем из списка загруженное
+				foreach (var item in uploaded)
+				{
+					uploadQueue.Remove(item);
+				}
+				// Выполняем действия на форме по завершении загрузки
+				afterUploadActions();
 			}
-			// Выполняем действия на форме по завершении загрузки
-			afterUploadActions();
+			catch (Exception ex)
+			{
+				log.Error(ex);
+			}
 		}
 
 		// Загрузка музыкальных файлов на сервер
@@ -144,6 +174,7 @@ namespace OwnRadio.DesktopPlayer
 			}
 			catch (Exception ex)
 			{
+				log.Error(ex);
 				MessageBox.Show(ex.Message);
 			}
 			return uploaded;
@@ -152,18 +183,26 @@ namespace OwnRadio.DesktopPlayer
 		// Добавляет в БД на сервере информацию о файле
 		private async Task<bool> updateFileInfo(string id, string fileName, string path)
 		{
-			// Создаем http клиент
-			var client = new HttpClient();
-			// Задаем адрес сервера
-			client.BaseAddress = new Uri(settings.serverAddress);
-			// В локальном пути подменяем символы "\" и "." для корректной работы GET запроса
-			var localPath = path.Substring(3).Replace('\\', '|').Replace('.', '_');
-			// В имени файла подменяем точку для корректной работы GET запроса
-			var file = fileName.Replace('.', '_');
-			// Выполняем асинхронный GET запрос
-			var result = await client.GetAsync("api/upload/" + id + "," + file + "," + localPath + "," + settings.userId);
-			client.Dispose();
-			return result.StatusCode.Equals(HttpStatusCode.OK);
+			try
+			{
+				// Создаем http клиент
+				var client = new HttpClient();
+				// Задаем адрес сервера
+				client.BaseAddress = new Uri(settings.serverAddress);
+				// В локальном пути подменяем символы "\" и "." для корректной работы GET запроса
+				var localPath = path.Substring(3).Replace('\\', '|').Replace('.', '_');
+				// В имени файла подменяем точку для корректной работы GET запроса
+				var file = fileName.Replace('.', '_');
+				// Выполняем асинхронный GET запрос
+				var result = await client.GetAsync("api/upload/" + id + "," + file + "," + localPath + "," + settings.userId);
+				client.Dispose();
+				return result.StatusCode.Equals(HttpStatusCode.OK);
+			}
+			catch (Exception ex)
+			{
+				log.Error(ex);
+				return false;
+			}
 		}
 	}
 }

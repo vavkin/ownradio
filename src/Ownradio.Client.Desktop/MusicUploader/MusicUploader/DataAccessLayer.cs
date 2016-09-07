@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Windows.Forms;
 using System.IO;
+using NLog;
 
 namespace OwnRadio.DesktopPlayer
 {
 	class DataAccessLayer
 	{
+		// Строка соединения
 		SQLiteConnection connection;
-		public DataAccessLayer(Settings settings)
+		// Логгер
+		private Logger log;
+
+		public DataAccessLayer(Settings settings, Logger logger)
 		{
 			try
 			{
@@ -36,6 +41,7 @@ namespace OwnRadio.DesktopPlayer
 			}
 			catch(Exception ex)
 			{
+				log.Error(ex);
 				MessageBox.Show(ex.Message, "Ошибка инициализации DAL");
 			}			
 		}
@@ -44,34 +50,48 @@ namespace OwnRadio.DesktopPlayer
 		public int addToQueue(MusicFile musicFile)
 		{
 			int rowsAffected = 0;
-			// Открываем соединение
-			connection.Open();
-			// Сохраняем запись
-			if (!exist(musicFile.fileName)) // которая не была сохранена ранее
+			try
 			{
-				// Формируем строку запроса
-				var commandSQL = string.Format("INSERT INTO Files (id, fileName, subPath) VALUES ('{0}', '{1}', '{2}')", musicFile.fileGuid, musicFile.fileName, musicFile.filePath);
-				// Создаем команду
-				SQLiteCommand cmd = new SQLiteCommand(commandSQL, connection);
-				// выполняем команду
-				rowsAffected += cmd.ExecuteNonQuery();
+				// Открываем соединение
+				connection.Open();
+				// Сохраняем запись
+				if (!exist(musicFile.fileName)) // которая не была сохранена ранее
+				{
+					// Формируем строку запроса
+					var commandSQL = string.Format("INSERT INTO Files (id, fileName, subPath) VALUES ('{0}', '{1}', '{2}')", musicFile.fileGuid, musicFile.fileName, musicFile.filePath);
+					// Создаем команду
+					SQLiteCommand cmd = new SQLiteCommand(commandSQL, connection);
+					// выполняем команду
+					rowsAffected += cmd.ExecuteNonQuery();
+				}
+				// Закрываем соединение
+				connection.Close();
 			}
-			// Закрываем соединение
-			connection.Close();
+			catch (Exception ex)
+			{
+				log.Error(ex);
+			}
 			return rowsAffected;
-
 		}
 
 		// Проверяет имеется ли в локальной БД файл
 		private bool exist(string fileName)
 		{
-			// Формируем строку запроса
-			var commandSQL = string.Format("SELECT count(*) FROM Files WHERE fileName LIKE '{0}'", fileName);
-			// Создаем команду
-			SQLiteCommand cmd = new SQLiteCommand(commandSQL, connection);
-			// Получаем количество записей
-			var result = cmd.ExecuteScalar();
-			int count = Convert.ToInt16(result);
+			var count = 0;
+			try
+			{
+				// Формируем строку запроса
+				var commandSQL = string.Format("SELECT count(*) FROM Files WHERE fileName LIKE '{0}'", fileName);
+				// Создаем команду
+				SQLiteCommand cmd = new SQLiteCommand(commandSQL, connection);
+				// Получаем количество записей
+				var result = cmd.ExecuteScalar();
+				count = Convert.ToInt16(result);
+			}
+			catch (Exception ex)
+			{
+				log.Error(ex);
+			}
 			return count > 0;
 		}
 
@@ -79,45 +99,60 @@ namespace OwnRadio.DesktopPlayer
 		internal List<MusicFile> getNotUploaded()
 		{
 			var files = new List<MusicFile>();
-			// Открываем соединение
-			connection.Open();
-			// Формируем строку запроса
-			var commandSQL = "SELECT * FROM Files WHERE uploaded=0";
-			// Создаем команду
-			SQLiteCommand cmd = new SQLiteCommand(commandSQL, connection);
-			// Получаем ридер
-			var reader = cmd.ExecuteReader();
-			// Читаем
-			while (reader.Read())
+			try
 			{
-				var file = new MusicFile()
+				// Открываем соединение
+				connection.Open();
+				// Формируем строку запроса
+				var commandSQL = "SELECT * FROM Files WHERE uploaded=0";
+				// Создаем команду
+				SQLiteCommand cmd = new SQLiteCommand(commandSQL, connection);
+				// Получаем ридер
+				var reader = cmd.ExecuteReader();
+				// Читаем
+				while (reader.Read())
 				{
-					fileGuid = Guid.Parse((string)reader["id"]),
-					fileName = (string)reader["fileName"],
-					filePath = (string)reader["subPath"]
-				};
-				files.Add(file);
+					var file = new MusicFile()
+					{
+						fileGuid = Guid.Parse((string)reader["id"]),
+						fileName = (string)reader["fileName"],
+						filePath = (string)reader["subPath"]
+					};
+					files.Add(file);
+				}
+				// Закрываем соединение
+				connection.Close();
 			}
-			// Закрываем соединение
-			connection.Close();
+			catch (Exception ex)
+			{
+				log.Error(ex);
+			}
 			return files;
 		}
 
 		// Помечает в БД файлы как загруженные
 		internal bool markAsUploaded(MusicFile musicFile)
 		{
-			// Открываем соединение
-			connection.Open();
-			// Формируем строку запроса
-			string commandSQL = string.Format("UPDATE Files SET uploaded=1 WHERE id LIKE '{0}'", musicFile.fileGuid);
-			// Создаем команду
-			SQLiteCommand cmd = new SQLiteCommand(commandSQL, connection);
-			// Получаем количество записей
-			var result = cmd.ExecuteScalar();
-			// Закрываем соединение
-			connection.Close();
+			int count = 0;
+			try
+			{
+				// Открываем соединение
+				connection.Open();
+				// Формируем строку запроса
+				string commandSQL = string.Format("UPDATE Files SET uploaded=1 WHERE id LIKE '{0}'", musicFile.fileGuid);
+				// Создаем команду
+				SQLiteCommand cmd = new SQLiteCommand(commandSQL, connection);
+				// Получаем количество записей
+				var result = cmd.ExecuteScalar();
+				// Закрываем соединение
+				connection.Close();
 
-			int count = Convert.ToInt16(result);
+				count = Convert.ToInt16(result);
+			}
+			catch (Exception ex)
+			{
+				log.Error(ex);
+			}
 			return count > 0;
 		}
 		#endregion

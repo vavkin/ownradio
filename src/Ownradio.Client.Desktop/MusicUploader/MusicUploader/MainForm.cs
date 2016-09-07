@@ -1,5 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using NLog;
+using System;
 using System.Windows.Forms;
 
 namespace OwnRadio.DesktopPlayer
@@ -7,15 +7,19 @@ namespace OwnRadio.DesktopPlayer
 	public partial class MainForm : Form
 	{
 		// Контроллер
-		MusicUploaderPresenter formLogic;
+		private MusicUploaderPresenter formLogic;
 		// Делегат для обратного вызова по окончании загрузки
-		public delegate void afterUploadActions();  
+		public delegate void afterUploadActions();
+		// Логгер
+		private Logger log;
 
 		public MainForm()
 		{
 			InitializeComponent();
+			// Создаем логгер
+			log = LogManager.GetCurrentClassLogger();
 			// Инициализируем логику
-			formLogic = new MusicUploaderPresenter();
+			formLogic = new MusicUploaderPresenter(log);
 			// загружаем список файлов из очереди в контрол на форме
 			loadData();
 			// Устанавливаем доступность кнопки загрузки на сервер

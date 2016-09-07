@@ -1,4 +1,6 @@
-﻿using System.Configuration;
+﻿using NLog;
+using System;
+using System.Configuration;
 
 namespace OwnRadio.DesktopPlayer
 {
@@ -11,23 +13,38 @@ namespace OwnRadio.DesktopPlayer
 		public string userId { get; set; }
 		// Строка подключения
 		public string connectionString { get; set; }
+		private Logger log;
 
 		// Конструктор - чтение настроек из конфигурации
-		public Settings()
+		public Settings(Logger logger)
 		{
-			userId = ConfigurationManager.AppSettings["userId"];
-			serverAddress = ConfigurationManager.AppSettings["serverAddress"];
-			connectionString = ConfigurationManager.ConnectionStrings["OwnradioDesktopClient"].ConnectionString;
+			try
+			{
+				userId = ConfigurationManager.AppSettings["userId"];
+				serverAddress = ConfigurationManager.AppSettings["serverAddress"];
+				connectionString = ConfigurationManager.ConnectionStrings["OwnradioDesktopClient"].ConnectionString;
+			}
+			catch(Exception ex)
+			{
+				log.Error(ex);
+			}
 		}
 
 		// Сохранение настроек
 		public void updateSettings()
 		{
-			var currentConfig = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-			currentConfig.AppSettings.Settings["userId"].Value = userId;
-			currentConfig.AppSettings.Settings["serverAddress"].Value = serverAddress;
-			currentConfig.Save(ConfigurationSaveMode.Modified);
-			ConfigurationManager.RefreshSection("appSettings");
+			try
+			{
+				var currentConfig = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+				currentConfig.AppSettings.Settings["userId"].Value = userId;
+				currentConfig.AppSettings.Settings["serverAddress"].Value = serverAddress;
+				currentConfig.Save(ConfigurationSaveMode.Modified);
+				ConfigurationManager.RefreshSection("appSettings");
+			}
+			catch (Exception ex)
+			{
+				log.Error(ex);
+			}
 		}
 	}
 }
