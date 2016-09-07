@@ -18,12 +18,14 @@ namespace OwnRadio.DesktopPlayer
 		{
 			try
 			{
+				log = logger;
 				var databaseFileName = settings.connectionString.Split('=')[1];
 				// Если файл БД существует, то устанавливаем соединение
 				if (File.Exists(databaseFileName))
 				{
 					// Подключаемся к БД
 					connection = new SQLiteConnection(settings.connectionString);
+					log.Debug("Установлено подключение к существующей БД");
 				}
 				// Если файл БД не существует, то создаем
 				else
@@ -37,6 +39,7 @@ namespace OwnRadio.DesktopPlayer
 					connection.Open();
 					command.ExecuteNonQuery();
 					connection.Close();
+					log.Debug("Создан новый файл БД");
 				}
 			}
 			catch(Exception ex)

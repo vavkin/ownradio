@@ -18,6 +18,7 @@ namespace OwnRadio.DesktopPlayer
 		// Конструктор - чтение настроек из конфигурации
 		public Settings(Logger logger)
 		{
+			log = logger;
 			try
 			{
 				userId = ConfigurationManager.AppSettings["userId"];
