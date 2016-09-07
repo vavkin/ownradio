@@ -1,5 +1,7 @@
 ﻿using NLog;
 using System;
+using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace OwnRadio.DesktopPlayer
@@ -8,8 +10,6 @@ namespace OwnRadio.DesktopPlayer
 	{
 		// Контроллер
 		private MusicUploaderPresenter formLogic;
-		// Делегат для обратного вызова по окончании загрузки
-		public delegate void afterUploadActions();
 		// Логгер
 		private Logger log;
 
@@ -42,6 +42,11 @@ namespace OwnRadio.DesktopPlayer
 					subItem = new ListViewItem.ListViewSubItem();
 					subItem.Text = musicFile.filePath;
 					item.SubItems.Add(subItem);
+					// Загруженные на сервер файлы помечаем зеленым
+					if (musicFile.uploaded)
+					{
+						item.ForeColor = Color.Green;
+					}
 					listViewFiles.Items.Add(item);
 				}
 			}
@@ -72,14 +77,17 @@ namespace OwnRadio.DesktopPlayer
 		}
 
 		// Запуск загрузки файлов
-		private void toolStripButtonUpload_Click(object sender, EventArgs e)
+		private async void toolStripButtonUpload_Click(object sender, EventArgs e)
 		{
 			try
 			{
 				// Запрещаем нажимать кнопку запуска чтобы не запустили дважды
 				toolStripButtonUpload.Enabled = false;
+				var progress = new Progress<string>(message => textBoxLog.Text += (message + Environment.NewLine));
+				updateControls("Загрузка начата");
 				// Асинхронно загружаем файлы на сервер
-				formLogic.uploadMusicFilesAsync(new afterUploadActions(afterUpload));
+				await Task.Factory.StartNew(() => formLogic.uploadFiles(progress));
+				updateControls("Загрузка завершена");
 			}
 			catch (Exception ex)
 			{
@@ -88,7 +96,7 @@ namespace OwnRadio.DesktopPlayer
 		}
 
 		// Действия по завершении загрузки
-		public void afterUpload()
+		public void updateControls(string message)
 		{
 			try
 			{
@@ -96,7 +104,8 @@ namespace OwnRadio.DesktopPlayer
 				loadData();
 				// Возобновляем возможность нажимать кнопку загрузки, если есть что загружать.
 				toolStripButtonUpload.Enabled = (listViewFiles.Items.Count > 0);
-				MessageBox.Show("Загрузка завершена!", "Операция выполнена");
+				textBoxLog.Text += message + Environment.NewLine;
+				//MessageBox.Show("Загрузка завершена!", "Операция выполнена");
 			}
 			catch (Exception ex)
 			{

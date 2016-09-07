@@ -35,10 +35,11 @@
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolStripButtonSettings = new System.Windows.Forms.ToolStripButton();
 			this.listViewFiles = new System.Windows.Forms.ListView();
+			this.fileID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.FileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.PathFromFolder = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.folderBrowserDialogMain = new System.Windows.Forms.FolderBrowserDialog();
-			this.fileID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.textBoxLog = new System.Windows.Forms.TextBox();
 			this.toolStripMain.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -46,10 +47,10 @@
 			// 
 			this.toolStripMain.ImageScalingSize = new System.Drawing.Size(32, 32);
 			this.toolStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.toolStripButtonSelect,
-			this.toolStripButtonUpload,
-			this.toolStripSeparator1,
-			this.toolStripButtonSettings});
+            this.toolStripButtonSelect,
+            this.toolStripButtonUpload,
+            this.toolStripSeparator1,
+            this.toolStripButtonSettings});
 			this.toolStripMain.Location = new System.Drawing.Point(0, 0);
 			this.toolStripMain.Name = "toolStripMain";
 			this.toolStripMain.Size = new System.Drawing.Size(583, 39);
@@ -96,18 +97,23 @@
 			// listViewFiles
 			// 
 			this.listViewFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-			| System.Windows.Forms.AnchorStyles.Left) 
-			| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.listViewFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-			this.fileID,
-			this.FileName,
-			this.PathFromFolder});
+            this.fileID,
+            this.FileName,
+            this.PathFromFolder});
 			this.listViewFiles.Location = new System.Drawing.Point(12, 42);
 			this.listViewFiles.Name = "listViewFiles";
-			this.listViewFiles.Size = new System.Drawing.Size(559, 293);
+			this.listViewFiles.Size = new System.Drawing.Size(559, 213);
 			this.listViewFiles.TabIndex = 1;
 			this.listViewFiles.UseCompatibleStateImageBehavior = false;
 			this.listViewFiles.View = System.Windows.Forms.View.Details;
+			// 
+			// fileID
+			// 
+			this.fileID.Text = "GUID";
+			this.fileID.Width = 180;
 			// 
 			// FileName
 			// 
@@ -119,16 +125,25 @@
 			this.PathFromFolder.Text = "Путь";
 			this.PathFromFolder.Width = 180;
 			// 
-			// fileID
+			// textBoxLog
 			// 
-			this.fileID.Text = "GUID";
-			this.fileID.Width = 180;
+			this.textBoxLog.AcceptsReturn = true;
+			this.textBoxLog.AcceptsTab = true;
+			this.textBoxLog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxLog.Location = new System.Drawing.Point(13, 262);
+			this.textBoxLog.Multiline = true;
+			this.textBoxLog.Name = "textBoxLog";
+			this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.textBoxLog.Size = new System.Drawing.Size(558, 81);
+			this.textBoxLog.TabIndex = 2;
 			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(583, 347);
+			this.Controls.Add(this.textBoxLog);
 			this.Controls.Add(this.listViewFiles);
 			this.Controls.Add(this.toolStripMain);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -153,6 +168,7 @@
 		private System.Windows.Forms.ColumnHeader FileName;
 		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogMain;
 		private System.Windows.Forms.ColumnHeader fileID;
+		private System.Windows.Forms.TextBox textBoxLog;
 	}
 }
 

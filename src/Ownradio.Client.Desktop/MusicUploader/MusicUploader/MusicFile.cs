@@ -11,5 +11,7 @@ namespace OwnRadio.DesktopPlayer
 		public string filePath { get; set; }
 		// Имя файла на сервере
 		public Guid fileGuid { get; set; }
+		// Флаг "Загружен на сервер"
+		public bool uploaded { get; set; }
 	}
 }

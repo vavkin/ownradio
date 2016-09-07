@@ -107,7 +107,7 @@ namespace OwnRadio.DesktopPlayer
 				// Открываем соединение
 				connection.Open();
 				// Формируем строку запроса
-				var commandSQL = "SELECT * FROM Files WHERE Uploaded=0";
+				var commandSQL = "SELECT * FROM Files";
 				// Создаем команду
 				SQLiteCommand cmd = new SQLiteCommand(commandSQL, connection);
 				// Получаем ридер
@@ -119,7 +119,8 @@ namespace OwnRadio.DesktopPlayer
 					{
 						fileGuid = Guid.Parse((string)reader["Id"]),
 						fileName = (string)reader["FileName"],
-						filePath = (string)reader["SubPath"]
+						filePath = (string)reader["SubPath"],
+						uploaded = (decimal)reader["Uploaded"] > 0
 					};
 					files.Add(file);
 				}

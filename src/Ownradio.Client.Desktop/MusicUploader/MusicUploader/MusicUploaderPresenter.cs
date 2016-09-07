@@ -18,6 +18,7 @@ namespace OwnRadio.DesktopPlayer
 		public Settings settings;
 		// Очередь загрузки
 		public List<MusicFile> uploadQueue;
+		// Логгер
 		private Logger log;
 
 		public MusicUploaderPresenter(Logger logger)
@@ -96,34 +97,12 @@ namespace OwnRadio.DesktopPlayer
 			}
 		}
 
-		// Загружает файлы на сервер асинхронно
-		public async void uploadMusicFilesAsync(MainForm.afterUploadActions afterUploadActions)
-		{
-			try
-			{
-				//Создаем новый объект потока для функции загрузки файлов
-				var uploaded = await Task.Factory.StartNew(() => uploadFiles());
-				// Удаляем из списка загруженное
-				foreach (var item in uploaded)
-				{
-					uploadQueue.Remove(item);
-				}
-				// Выполняем действия на форме по завершении загрузки
-				afterUploadActions();
-			}
-			catch (Exception ex)
-			{
-				log.Error(ex);
-			}
-		}
-
 		// Загрузка музыкальных файлов на сервер
-		private List<MusicFile> uploadFiles()
+		public void uploadFiles(IProgress<string> progress)
 		{
-			var uploaded = new List<MusicFile>();
 			try
 			{
-				foreach (var musicFile in uploadQueue)
+				foreach (var musicFile in uploadQueue.Where(s => !s.uploaded))
 				{
 					// Формируем полный путь к файлу
 					var fullFileName = musicFile.filePath + "\\" + musicFile.fileName;
@@ -166,8 +145,16 @@ namespace OwnRadio.DesktopPlayer
 						if (b.Result)
 						{
 							dal.markAsUploaded(musicFile);
-							uploaded.Add(musicFile);
+							progress.Report("Отправлен файл " + musicFile.fileName);
+							log.Debug("Отправлен файл " + musicFile.fileName);
 						}
+						// устанавливаем флаг загруженности на сервер
+						musicFile.uploaded = b.Result;
+					}
+					else
+					{
+						log.Debug("НЕ отправлен файл " + musicFile.fileName);
+						progress.Report("НЕ отправлен файл " + musicFile.fileName);
 					}
 					httpClient.Dispose();
 				}
@@ -177,7 +164,6 @@ namespace OwnRadio.DesktopPlayer
 				log.Error(ex);
 				MessageBox.Show(ex.Message);
 			}
-			return uploaded;
 		}
 
 		// Добавляет в БД на сервере информацию о файле

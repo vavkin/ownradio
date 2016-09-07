@@ -36,37 +36,45 @@ namespace OldStyleWebAPI.Controllers
 		[MimeMultipart]
 		public async Task<FileUploadResult> Post()
 		{
-			var path = "~/App_Data/uploads";
-			if (Request.Headers.Contains("userId"))
+			try
 			{
-				path += "/" + Request.Headers.GetValues("userId").ToArray<string>()[0];
+				var path = "~/App_Data/uploads";
+				if (Request.Headers.Contains("userId"))
+				{
+					path += "/" + Request.Headers.GetValues("userId").ToArray<string>()[0];
+
+				}
 				
+				// Получаем путь
+				var uploadPath = HttpContext.Current.Server.MapPath(path);
+
+				// Если директория не существует, то создает ее
+				if (!Directory.Exists(uploadPath))
+					Directory.CreateDirectory(uploadPath);
+
+				// Создаем провайдер загрузки
+				var multipartFormDataStreamProvider = new UploadMultipartFormProvider(uploadPath);
+
+				// Асинхронно читаем данные
+				await Request.Content.ReadAsMultipartAsync(multipartFormDataStreamProvider);
+
+				// Получаем имя файла
+				string localFileName = multipartFormDataStreamProvider
+					.FileData.Select(multiPartData => multiPartData.LocalFileName).FirstOrDefault();
+
+				// Create response
+				return new FileUploadResult
+				{
+					LocalFilePath = localFileName,
+					FileName = Path.GetFileName(localFileName),
+					FileLength = new FileInfo(localFileName).Length
+				};
 			}
-
-			// Если директория не существует, то создает ее
-			if (!Directory.Exists(path))
-				Directory.CreateDirectory(path); 
-
-			// Получаем путь
-			var uploadPath = HttpContext.Current.Server.MapPath(path);
-
-			// Создаем провайдер загрузки
-			var multipartFormDataStreamProvider = new UploadMultipartFormProvider(uploadPath);
-
-			// Асинхронно читаем данные
-			await Request.Content.ReadAsMultipartAsync(multipartFormDataStreamProvider);
-
-			// Получаем имя файла
-			string localFileName = multipartFormDataStreamProvider
-				.FileData.Select(multiPartData => multiPartData.LocalFileName).FirstOrDefault();
-
-			// Create response
-			return new FileUploadResult
+			catch(Exception ex)
 			{
-				LocalFilePath = localFileName,
-				FileName = Path.GetFileName(localFileName),
-				FileLength = new FileInfo(localFileName).Length
-			};
+				var str = ex.Message;
+			}
+			return null;
 		}
 	}
 }
