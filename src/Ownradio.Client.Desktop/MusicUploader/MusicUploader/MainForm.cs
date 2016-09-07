@@ -6,8 +6,10 @@ namespace OwnRadio.DesktopPlayer
 {
 	public partial class MainForm : Form
 	{
-		MusicUploaderPresenter formLogic;		   // Контроллер
-		public delegate void afterUploadActions();  // Делегат для обратного вызова по окончании загрузки
+		// Контроллер
+		MusicUploaderPresenter formLogic;
+		// Делегат для обратного вызова по окончании загрузки
+		public delegate void afterUploadActions();  
 
 		public MainForm()
 		{

@@ -14,11 +14,13 @@ namespace OwnRadio.DesktopPlayer
 			try
 			{
 				var databaseFileName = settings.connectionString.Split('=')[1];
-				if (File.Exists(databaseFileName))			// Если файл БД существует
+				// Если файл БД существует, то устанавливаем соединение
+				if (File.Exists(databaseFileName))
 				{
 					// Подключаемся к БД
 					connection = new SQLiteConnection(settings.connectionString);
 				}
+				// Если файл БД не существует, то создаем
 				else
 				{
 					// Создаем БД

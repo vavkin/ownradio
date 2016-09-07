@@ -11,9 +11,12 @@ namespace OwnRadio.DesktopPlayer
 {
 	class MusicUploaderPresenter
 	{
-		private DataAccessLayer dal;					// Слой доступа к данным
-		public Settings settings;						// Настройки программы
-		public List<MusicFile> uploadQueue;				// Очередь загрузки
+		// Слой доступа к данным
+		private DataAccessLayer dal;
+		// Настройки программы
+		public Settings settings;
+		// Очередь загрузки
+		public List<MusicFile> uploadQueue;
 
 		public MusicUploaderPresenter()
 		{
