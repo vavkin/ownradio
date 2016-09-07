@@ -35,7 +35,7 @@ namespace OwnRadio.DesktopPlayer
 					// Подключаемся к БД
 					connection = new SQLiteConnection(settings.connectionString);
 					// Создаем таблицу Files
-					var command = new SQLiteCommand("CREATE TABLE \"Files\" ( `id` TEXT NOT NULL, `fileName` TEXT NOT NULL, `subPath` TEXT, `uploaded` NUMERIC DEFAULT 0, PRIMARY KEY(`id`) );", connection);
+					var command = new SQLiteCommand("CREATE TABLE \"Files\" ( `Id` TEXT NOT NULL, `FileName` TEXT NOT NULL, `SubPath` TEXT, `Uploaded` NUMERIC DEFAULT 0, PRIMARY KEY(`id`) );", connection);
 					connection.Open();
 					command.ExecuteNonQuery();
 					connection.Close();
@@ -61,7 +61,7 @@ namespace OwnRadio.DesktopPlayer
 				if (!exist(musicFile.fileName)) // которая не была сохранена ранее
 				{
 					// Формируем строку запроса
-					var commandSQL = string.Format("INSERT INTO Files (id, fileName, subPath) VALUES ('{0}', '{1}', '{2}')", musicFile.fileGuid, musicFile.fileName, musicFile.filePath);
+					var commandSQL = string.Format("INSERT INTO Files (Id, FileName, SubPath) VALUES ('{0}', '{1}', '{2}')", musicFile.fileGuid, musicFile.fileName, musicFile.filePath);
 					// Создаем команду
 					SQLiteCommand cmd = new SQLiteCommand(commandSQL, connection);
 					// выполняем команду
@@ -84,7 +84,7 @@ namespace OwnRadio.DesktopPlayer
 			try
 			{
 				// Формируем строку запроса
-				var commandSQL = string.Format("SELECT count(*) FROM Files WHERE fileName LIKE '{0}'", fileName);
+				var commandSQL = string.Format("SELECT count(*) FROM Files WHERE FileName LIKE '{0}'", fileName);
 				// Создаем команду
 				SQLiteCommand cmd = new SQLiteCommand(commandSQL, connection);
 				// Получаем количество записей
@@ -107,7 +107,7 @@ namespace OwnRadio.DesktopPlayer
 				// Открываем соединение
 				connection.Open();
 				// Формируем строку запроса
-				var commandSQL = "SELECT * FROM Files WHERE uploaded=0";
+				var commandSQL = "SELECT * FROM Files WHERE Uploaded=0";
 				// Создаем команду
 				SQLiteCommand cmd = new SQLiteCommand(commandSQL, connection);
 				// Получаем ридер
@@ -117,9 +117,9 @@ namespace OwnRadio.DesktopPlayer
 				{
 					var file = new MusicFile()
 					{
-						fileGuid = Guid.Parse((string)reader["id"]),
-						fileName = (string)reader["fileName"],
-						filePath = (string)reader["subPath"]
+						fileGuid = Guid.Parse((string)reader["Id"]),
+						fileName = (string)reader["FileName"],
+						filePath = (string)reader["SubPath"]
 					};
 					files.Add(file);
 				}
@@ -142,7 +142,7 @@ namespace OwnRadio.DesktopPlayer
 				// Открываем соединение
 				connection.Open();
 				// Формируем строку запроса
-				string commandSQL = string.Format("UPDATE Files SET uploaded=1 WHERE id LIKE '{0}'", musicFile.fileGuid);
+				string commandSQL = string.Format("UPDATE Files SET Uploaded=1 WHERE Id LIKE '{0}'", musicFile.fileGuid);
 				// Создаем команду
 				SQLiteCommand cmd = new SQLiteCommand(commandSQL, connection);
 				// Получаем количество записей
