@@ -42,9 +42,10 @@ namespace OldStyleWebAPI.Controllers
 				path += "/" + Request.Headers.GetValues("userId").ToArray<string>()[0];
 				
 			}
-			
+
+			// Если директория не существует, то создает ее
 			if (!Directory.Exists(path))
-				Directory.CreateDirectory(path); // почему-то создает по-нарошку :-(
+				Directory.CreateDirectory(path); 
 
 			// Получаем путь
 			var uploadPath = HttpContext.Current.Server.MapPath(path);

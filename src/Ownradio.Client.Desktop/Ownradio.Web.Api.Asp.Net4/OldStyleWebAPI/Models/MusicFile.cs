@@ -44,7 +44,7 @@ namespace OldStyleWebAPI.Models
 			}
 			catch (Exception ex)
 			{
-				// 42883: функция registerfile(id => uuid, fileName => text, path => text, userId => uuid) не существует"
+				// для отладки
 				var message = ex.Message;
 			}
 		}
