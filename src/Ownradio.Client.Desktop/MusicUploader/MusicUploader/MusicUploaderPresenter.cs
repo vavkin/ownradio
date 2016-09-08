@@ -112,16 +112,20 @@ namespace OwnRadio.DesktopPlayer
 
 					HttpClient httpClient = new HttpClient();
 					MultipartFormDataContent form = new MultipartFormDataContent();
-
+					form.Headers.Add("userId", settings.userId);
 					form.Add(new StringContent(musicFile.fileGuid.ToString()), "fileGuid");
 					form.Add(new StringContent(musicFile.fileName), "fileName");
 					form.Add(new StringContent(musicFile.filePath), "filePath");
-					form.Add(new ByteArrayContent(byteArray, 0, byteArray.Count()), "musicFile", musicFile.fileName);
+					form.Add(new ByteArrayContent(byteArray, 0, byteArray.Count()), "musicFile", musicFile.fileGuid.ToString());
 					HttpResponseMessage response = await httpClient.PostAsync(settings.serverAddress + "api/upload", form);
 
 					response.EnsureSuccessStatusCode();
 					httpClient.Dispose();
 					string sd = response.Content.ReadAsStringAsync().Result;
+
+					dal.markAsUploaded(musicFile);
+					progress.Report("Отправлен файл " + musicFile.fileName);
+					log.Debug("Отправлен файл " + musicFile.fileName);
 				}
 			}
 			catch (Exception ex)
