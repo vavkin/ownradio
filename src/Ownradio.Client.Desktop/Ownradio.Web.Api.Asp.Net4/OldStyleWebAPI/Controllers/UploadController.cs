@@ -21,8 +21,9 @@ namespace OldStyleWebAPI.Controllers
 			{
 				// Получаем из заголовков идентификатор пользователя
 				var userId = Request.Headers.GetValues("userId").ToArray<string>()[0];
+				// Получаем папку для загрузки файлов пользователя
 				var uploadFolder = ConfigurationManager.AppSettings["UploadsFolder"];
-				// Формируем относительный путь для загрузки файлов пользователя
+				// Формируем путь для загрузки файлов пользователя
 				var uploadPath = string.Format("{0}/{1}", uploadFolder, userId);
 				// Если директория не существует, то создает ее
 				if (!Directory.Exists(uploadPath))

@@ -121,7 +121,7 @@ namespace OwnRadio.DesktopPlayer
 					form.Add(new StringContent(musicFile.fileName), "fileName");
 					form.Add(new StringContent(musicFile.filePath), "filePath");
 					// добавляем музыкальный файл
-					form.Add(new ByteArrayContent(byteArray, 0, byteArray.Count()), "musicFile", musicFile.fileGuid.ToString());
+					form.Add(new ByteArrayContent(byteArray, 0, byteArray.Count()), "musicFile", musicFile.fileGuid + ".mp3");
 					// Выполняем асинхронный запрос к серверу
 					HttpResponseMessage response = await httpClient.PostAsync(settings.serverAddress + "api/upload", form);
 					// Если код не успешный генерируем исключение
