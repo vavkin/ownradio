@@ -58,6 +58,8 @@ namespace OldStyleWebAPI.Controllers
 				// Асинхронно читаем данные
 				await Request.Content.ReadAsMultipartAsync(multipartFormDataStreamProvider);
 
+				var foo = multipartFormDataStreamProvider.FormData;
+
 				// Получаем имя файла
 				string localFileName = multipartFormDataStreamProvider
 					.FileData.Select(multiPartData => multiPartData.LocalFileName).FirstOrDefault();

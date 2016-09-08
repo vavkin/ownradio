@@ -86,7 +86,7 @@ namespace OwnRadio.DesktopPlayer
 				var progress = new Progress<string>(message => textBoxLog.Text += (message + Environment.NewLine));
 				updateControls("Загрузка начата");
 				// Асинхронно загружаем файлы на сервер
-				await Task.Factory.StartNew(() => formLogic.uploadFiles(progress));
+				await Task.Factory.StartNew(() => formLogic.uploadFiles2(progress));
 				updateControls("Загрузка завершена");
 			}
 			catch (Exception ex)

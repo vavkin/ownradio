@@ -96,6 +96,39 @@ namespace OwnRadio.DesktopPlayer
 				log.Error(ex);
 			}
 		}
+		// Попытка 2 загрузки музыкальных файлов на сервер
+		public async void uploadFiles2(IProgress<string> progress)
+		{
+			try
+			{
+				foreach (var musicFile in uploadQueue.Where(s => !s.uploaded))
+				{
+					// Формируем полный путь к файлу
+					var fullFileName = musicFile.filePath + "\\" + musicFile.fileName;
+					// Открываем файловый поток
+					var fileStream = File.Open(fullFileName, FileMode.Open);
+					byte[] byteArray = new byte[fileStream.Length];
+					fileStream.Read(byteArray, 0, (int)fileStream.Length);
+
+					HttpClient httpClient = new HttpClient();
+					MultipartFormDataContent form = new MultipartFormDataContent();
+
+					form.Add(new StringContent(musicFile.fileGuid.ToString()), "fileGuid");
+					form.Add(new StringContent(musicFile.fileName), "fileName");
+					form.Add(new StringContent(musicFile.filePath), "filePath");
+					form.Add(new ByteArrayContent(byteArray, 0, byteArray.Count()), "musicFile", musicFile.fileName);
+					HttpResponseMessage response = await httpClient.PostAsync(settings.serverAddress + "api/upload", form);
+
+					response.EnsureSuccessStatusCode();
+					httpClient.Dispose();
+					string sd = response.Content.ReadAsStringAsync().Result;
+				}
+			}
+			catch (Exception ex)
+			{
+				log.Error(ex);
+			}
+		}
 
 		// Загрузка музыкальных файлов на сервер
 		public void uploadFiles(IProgress<string> progress)
