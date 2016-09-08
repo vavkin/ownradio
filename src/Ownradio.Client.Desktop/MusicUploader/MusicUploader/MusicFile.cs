@@ -3,7 +3,7 @@
 namespace OwnRadio.DesktopPlayer
 {
 	// Класс - информация о музыкальном файле
-	class MusicFile
+	public class MusicFile
 	{
 		// Имя файла
 		public string fileName { get; set; }

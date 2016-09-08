@@ -1,6 +1,7 @@
 ﻿using OldStyleWebAPI.Infrastructure;
 using OldStyleWebAPI.Models;
 using System;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -20,10 +21,9 @@ namespace OldStyleWebAPI.Controllers
 			{
 				// Получаем из заголовков идентификатор пользователя
 				var userId = Request.Headers.GetValues("userId").ToArray<string>()[0];
+				var uploadFolder = ConfigurationManager.AppSettings["UploadsFolder"];
 				// Формируем относительный путь для загрузки файлов пользователя
-				var path = string.Format("~/App_Data/{0}", userId);
-				// Получаем полный путь для загрузки файлов пользователя
-				var uploadPath = HttpContext.Current.Server.MapPath(path);
+				var uploadPath = string.Format("{0}/{1}", uploadFolder, userId);
 				// Если директория не существует, то создает ее
 				if (!Directory.Exists(uploadPath))
 					Directory.CreateDirectory(uploadPath);

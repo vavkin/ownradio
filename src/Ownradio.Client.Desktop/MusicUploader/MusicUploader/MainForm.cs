@@ -83,11 +83,9 @@ namespace OwnRadio.DesktopPlayer
 			{
 				// Запрещаем нажимать кнопку запуска чтобы не запустили дважды
 				toolStripButtonUpload.Enabled = false;
-				var progress = new Progress<string>(message => textBoxLog.Text += (message + Environment.NewLine));
-				updateControls("Загрузка начата");
+				var progress = new Progress<MusicFile>(file => updateControls(file));
 				// Асинхронно загружаем файлы на сервер
-				await Task.Factory.StartNew(() => formLogic.uploadFiles2(progress));
-				updateControls("Загрузка завершена");
+				await Task.Factory.StartNew(() => formLogic.uploadFiles(progress));
 			}
 			catch (Exception ex)
 			{
@@ -96,16 +94,18 @@ namespace OwnRadio.DesktopPlayer
 		}
 
 		// Действия по завершении загрузки
-		public void updateControls(string message)
+		public void updateControls(MusicFile file)
 		{
 			try
 			{
-				// Обновляем список файлов в форме
-				loadData();
+				// получаем
+				var item = listViewFiles.FindItemWithText(file.fileGuid.ToString());
+				// закрашиваем отправленный файл зеленым цветом
+				if(item != null)
+					item.ForeColor = Color.Green;
 				// Возобновляем возможность нажимать кнопку загрузки, если есть что загружать.
 				toolStripButtonUpload.Enabled = (listViewFiles.Items.Count > 0);
-				textBoxLog.Text += message + Environment.NewLine;
-				//MessageBox.Show("Загрузка завершена!", "Операция выполнена");
+				textBoxLog.Text += "Добавлен файл " + file.fileName + Environment.NewLine;
 			}
 			catch (Exception ex)
 			{
