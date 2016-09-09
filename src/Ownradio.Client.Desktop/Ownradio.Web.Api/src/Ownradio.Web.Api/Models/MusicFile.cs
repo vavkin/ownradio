@@ -24,14 +24,18 @@ namespace Ownradio.Web.Api.Models
 			using (var npgSqlConnection = new NpgsqlConnection(connectionString))
 			{
 				// Создаем комманду - с регистром имени функции проблема: не видит
-				var npgSqlCommand = new NpgsqlCommand("registerfile", npgSqlConnection);
+				var npgSqlCommand = new NpgsqlCommand();
+				// Указываем имя хранимой процедуры (функции)
+				npgSqlCommand.CommandText = "RegisterFile";
+				// Указываем подключение
+				npgSqlCommand.Connection = npgSqlConnection;
 				// Уточняем тип комманды - хранимая процедура
 				npgSqlCommand.CommandType = CommandType.StoredProcedure;
 				// Добавляем параметры
-				npgSqlCommand.Parameters.AddWithValue("id", id);
-				npgSqlCommand.Parameters.AddWithValue("fileName", fileName);
-				npgSqlCommand.Parameters.AddWithValue("path", path);
-				npgSqlCommand.Parameters.AddWithValue("userId", userId);
+				npgSqlCommand.Parameters.AddWithValue("ID", id);
+				npgSqlCommand.Parameters.AddWithValue("FileName", fileName);
+				npgSqlCommand.Parameters.AddWithValue("Path", path);
+				npgSqlCommand.Parameters.AddWithValue("UserID", userId);
 				// Открываем соединение
 				npgSqlConnection.Open();
 				// Выполняем хранимую процедуру (функцию)

@@ -35,7 +35,7 @@ namespace OwnRadio.DesktopPlayer
 					// Подключаемся к БД
 					connection = new SQLiteConnection(settings.connectionString);
 					// Создаем таблицу Files
-					var command = new SQLiteCommand("CREATE TABLE \"Files\" ( `Id` TEXT NOT NULL, `FileName` TEXT NOT NULL, `SubPath` TEXT, `Uploaded` NUMERIC DEFAULT 0, PRIMARY KEY(`id`) );", connection);
+					var command = new SQLiteCommand("CREATE TABLE \"Files\" ( `ID` TEXT NOT NULL, `FileName` TEXT NOT NULL, `SubPath` TEXT, `Uploaded` INTEGER DEFAULT 0, PRIMARY KEY(`ID`) );", connection);
 					connection.Open();
 					command.ExecuteNonQuery();
 					connection.Close();
@@ -61,7 +61,7 @@ namespace OwnRadio.DesktopPlayer
 				if (!exist(musicFile.fileName)) // которая не была сохранена ранее
 				{
 					// Формируем строку запроса
-					var commandSQL = string.Format("INSERT INTO Files (Id, FileName, SubPath) VALUES ('{0}', '{1}', '{2}')", musicFile.fileGuid, musicFile.fileName, musicFile.filePath);
+					var commandSQL = string.Format("INSERT INTO Files (ID, FileName, SubPath) VALUES ('{0}', '{1}', '{2}')", musicFile.fileGuid, musicFile.fileName, musicFile.filePath);
 					// Создаем команду
 					SQLiteCommand cmd = new SQLiteCommand(commandSQL, connection);
 					// выполняем команду
@@ -117,10 +117,10 @@ namespace OwnRadio.DesktopPlayer
 				{
 					var file = new MusicFile()
 					{
-						fileGuid = Guid.Parse((string)reader["Id"]),
+						fileGuid = Guid.Parse((string)reader["ID"]),
 						fileName = (string)reader["FileName"],
 						filePath = (string)reader["SubPath"],
-						uploaded = (decimal)reader["Uploaded"] > 0
+						uploaded = (long)reader["Uploaded"] > 0
 					};
 					files.Add(file);
 				}
@@ -143,7 +143,7 @@ namespace OwnRadio.DesktopPlayer
 				// Открываем соединение
 				connection.Open();
 				// Формируем строку запроса
-				string commandSQL = string.Format("UPDATE Files SET Uploaded=1 WHERE Id LIKE '{0}'", musicFile.fileGuid);
+				string commandSQL = string.Format("UPDATE Files SET Uploaded=1 WHERE ID LIKE '{0}'", musicFile.fileGuid);
 				// Создаем команду
 				SQLiteCommand cmd = new SQLiteCommand(commandSQL, connection);
 				// Получаем количество записей
