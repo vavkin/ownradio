@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
-        android:text="Please, enter the username"
+        android:text="Please, enter DeviceID"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,6 +36,6 @@
         android:text="Exit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/Exit" 
-        android:layout_gravity="bottom"/>
+        android:id="@+id/Exit"
+        android:layout_gravity="bottom" />
 </LinearLayout>
