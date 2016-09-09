@@ -120,6 +120,7 @@ namespace OwnRadio.DesktopPlayer
 					form.Add(new StringContent(musicFile.fileGuid.ToString()), "fileGuid");
 					form.Add(new StringContent(musicFile.fileName), "fileName");
 					form.Add(new StringContent(musicFile.filePath), "filePath");
+					form.Add(new StringContent(settings.userId), "userId");
 					// добавляем музыкальный файл
 					form.Add(new ByteArrayContent(byteArray, 0, byteArray.Count()), "musicFile", musicFile.fileGuid + ".mp3");
 					// Выполняем асинхронный запрос к серверу
