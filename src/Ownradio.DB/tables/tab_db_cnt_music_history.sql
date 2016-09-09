@@ -1,6 +1,7 @@
 CREATE TABLE db.cnt_music_history( 
  id SERIAL,
  user_id VARCHAR(128) NOT NULL,
+ device_id VARCHAR(128) NOT NULL,
  music_id INTEGER NOT NULL,
  description varchar(1024),
  changed_in varchar(128),

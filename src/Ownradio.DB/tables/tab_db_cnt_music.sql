@@ -1,6 +1,6 @@
 CREATE TABLE db.cnt_music ( 
  id SERIAL,
- filename varchar(2048),
+ filename varchar(2048) not null,
  title varchar(30),
  artist varchar(30),
  album varchar(30),
