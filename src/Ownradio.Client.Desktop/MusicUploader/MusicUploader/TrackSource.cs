@@ -43,21 +43,23 @@ namespace OwnRadio.DesktopPlayer
         private NextTrackResponse getNextTrack(string url)
         {
             NextTrackResponse result = null;
-            HttpClient httpClient = new HttpClient();
             bool received = false;
-            Task taskReceive = httpClient.GetAsync(url).ContinueWith(task =>
-            {
-                if (task.Status == TaskStatus.RanToCompletion)
+            using (HttpClient httpClient = new HttpClient())
+            {                
+                Task taskReceive = httpClient.GetAsync(url).ContinueWith(task =>
                 {
-                    var response = task.Result;
-                    if (response.IsSuccessStatusCode)
+                    if (task.Status == TaskStatus.RanToCompletion)
                     {
-                        result = response.Content.ReadAsAsync<NextTrackResponse>().Result;
-                        received = result != null;                            
+                        var response = task.Result;
+                        if (response.IsSuccessStatusCode)
+                        {
+                            result = response.Content.ReadAsAsync<NextTrackResponse>().Result;
+                            received = result != null;
+                        }
                     }
-                }
-            });
-            taskReceive.Wait();
+                });
+                taskReceive.Wait();
+            }
             log.Debug(received ? "получен трек" : "не получен трек");
             return result;
         }
