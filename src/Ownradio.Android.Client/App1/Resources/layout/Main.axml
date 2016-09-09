@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:text="Please, enter the username"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView1" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtUsername" />
+    <ImageButton
+        android:id="@+id/Play"
+        android:layout_width="100.0dp"
+        android:layout_height="100.0dp"
+        android:background="@drawable/btn_play_selector"
+        android:onClick="onClick"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp" />
+    <ImageButton
+        android:id="@+id/Fwd"
+        android:layout_width="100.0dp"
+        android:layout_height="100.0dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/fwd"
+        android:layout_gravity="center" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/statusBar" />
+    <Button
+        android:text="Exit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/Exit" 
+        android:layout_gravity="bottom"/>
+</LinearLayout>
