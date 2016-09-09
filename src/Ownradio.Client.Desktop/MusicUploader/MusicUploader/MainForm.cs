@@ -13,7 +13,7 @@ namespace OwnRadio.DesktopPlayer
 		// Логгер
 		private Logger log;
 		// Плеер
-		private Player player;
+		private TrackPlayer trackPlayer;
 
 		public MainForm()
 		{
@@ -27,7 +27,7 @@ namespace OwnRadio.DesktopPlayer
 			// Устанавливаем доступность кнопки загрузки на сервер
 			toolStripButtonUpload.Enabled = (listViewFiles.Items.Count > 0);
 
-			player = new Player(log);
+			trackPlayer = new TrackPlayer(log);
 		}
 
 		// Загружает список файлов из очереди в контрол списка на форме
@@ -126,8 +126,8 @@ namespace OwnRadio.DesktopPlayer
 				settingsForm.settings = formLogic.settings;
 				if (settingsForm.ShowDialog() == DialogResult.OK)
 				{
-					player?.Dispose();
-					player = new Player(log);
+					trackPlayer?.Dispose();
+					trackPlayer = new TrackPlayer(log);
 				}
 			}
 			catch (Exception ex)
@@ -138,21 +138,21 @@ namespace OwnRadio.DesktopPlayer
 
 		private void toolStripButtonPlay_Click(object sender, EventArgs e)
 		{
-			if (player.IsPause)
+			if (trackPlayer.IsPause)
 			{
-				player.Play();
+				trackPlayer.Resume();
 				toolStripButtonPlay.Text = " ⏸ ";
 			}
 			else
 			{
-				player.Pause();
+				trackPlayer.Pause();
 				toolStripButtonPlay.Text = " ▶️ ";
 			}
 		}
 
 		private void toolStripButton2_Click(object sender, EventArgs e)
 		{
-			player.Next();
+			trackPlayer.PlayNextTrack();
 		}
 	}
 }

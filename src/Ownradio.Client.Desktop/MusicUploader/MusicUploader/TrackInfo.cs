@@ -1,9 +1,8 @@
 ﻿namespace OwnRadio.DesktopPlayer
 {
-	class NextTrackResponse
+	class TrackInfo
 	{
 		public string Method;
 		public string TrackId;
 	}
-
 }

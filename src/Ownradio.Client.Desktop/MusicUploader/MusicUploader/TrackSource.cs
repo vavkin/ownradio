@@ -7,63 +7,61 @@ namespace OwnRadio.DesktopPlayer
 	class TrackSource
 	{
 		private string userId;
-		private string address;
+		private string serverAddress;
 		Logger log;
 
 		public TrackSource(Settings settings, Logger logger)
 		{
-			address = settings.serverAddress;
+			serverAddress = settings.serverAddress;
 			userId = settings.userId;
 			log = logger;
 		}
 	   
-		public NextTrackResponse FirstTrack()
+		public TrackInfo GetFirstTrackInfo()
 		{
-			string url = getNextTrackRequest("-1", "", false);
-			return getNextTrack(url);
+			string url = getTrackInfoRequest("-1", "", false);
+			return getTrackInfo(url);
 		}
 
-		public NextTrackResponse NextTrack(string lastTrackId, string lastTrackMethod, bool listedTillTheEnd)
+		public TrackInfo GetNextTrackInfo(string lastTrackId, string lastTrackMethod, bool listedTillTheEnd)
 		{
-			string url = getNextTrackRequest(lastTrackId, lastTrackMethod, listedTillTheEnd);
-			return getNextTrack(url);
+			string url = getTrackInfoRequest(lastTrackId, lastTrackMethod, listedTillTheEnd);
+			return getTrackInfo(url);
 		}
 
-		public string Play(string trackId)
+		public string GetTrackPlayUrl(string trackId)
 		{
-			return string.Format("{0}/api/TrackSource/Play?trackId={1}", address, trackId);
+			return string.Format("{0}/api/TrackSource/Play?trackId={1}", serverAddress, trackId);
 		}
 
-		private string getNextTrackRequest(string lastTrackId, string lastTrackMethod, bool listedTillTheEnd)
+		private string getTrackInfoRequest(string lastTrackId, string lastTrackMethod, bool listedTillTheEnd)
 		{
 			return string.Format("{0}/api/TrackSource/NextTrack?userId={1}&lastTrackId={2}&lastTrackMethod={3}&listedTillTheEnd={4}"
-				, address, userId, lastTrackId, lastTrackMethod, listedTillTheEnd.ToString().ToLower());
+				, serverAddress, userId, lastTrackId, lastTrackMethod, listedTillTheEnd.ToString().ToLower());
 		}
 
-		private NextTrackResponse getNextTrack(string url)
+		private TrackInfo getTrackInfo(string url)
 		{
-			NextTrackResponse result = null;
+			TrackInfo responce = null;
 			bool received = false;
 			using (HttpClient httpClient = new HttpClient())
 			{                
-				Task taskReceive = httpClient.GetAsync(url).ContinueWith(task =>
+				Task getTask = httpClient.GetAsync(url).ContinueWith(task =>
 				{
 					if (task.Status == TaskStatus.RanToCompletion)
 					{
 						var response = task.Result;
 						if (response.IsSuccessStatusCode)
 						{
-							result = response.Content.ReadAsAsync<NextTrackResponse>().Result;
-							received = result != null;
+							responce = response.Content.ReadAsAsync<TrackInfo>().Result;
+							received = responce != null;
 						}
 					}
 				});
-				taskReceive.Wait();
+				getTask.Wait();
 			}
 			log.Debug(received ? "получен трек" : "не получен трек");
-			return result;
+			return responce;
 		}
-
-
 	}
 }
