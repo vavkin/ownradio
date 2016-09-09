@@ -124,9 +124,11 @@ namespace OwnRadio.DesktopPlayer
 			{
 				var settingsForm = new SettingsForm();
 				settingsForm.settings = formLogic.settings;
-				settingsForm.ShowDialog();
-				player?.Dispose();
-				player = new Player(log);
+				if (settingsForm.ShowDialog() == DialogResult.OK)
+				{
+					player?.Dispose();
+					player = new Player(log);
+				}
 			}
 			catch (Exception ex)
 			{
