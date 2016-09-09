@@ -4,7 +4,7 @@ using WMPLib;
 
 namespace OwnRadio.DesktopPlayer
 {
-	class Player
+	class Player : IDisposable
 	{              
 		private TrackSource trackSource;
 		private NextTrackResponse currentResponce;
@@ -91,6 +91,11 @@ namespace OwnRadio.DesktopPlayer
 			{
 				log.Error(ex.Message);
 			}
+		}
+
+		public void Dispose()
+		{
+			wplayer?.close();
 		}
 	}
 }
