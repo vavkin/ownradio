@@ -40,6 +40,8 @@
 			this.PathFromFolder = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.folderBrowserDialogMain = new System.Windows.Forms.FolderBrowserDialog();
 			this.textBoxLog = new System.Windows.Forms.TextBox();
+			this.toolStripButtonPlay = new System.Windows.Forms.ToolStripButton();
+			this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
 			this.toolStripMain.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -50,10 +52,12 @@
             this.toolStripButtonSelect,
             this.toolStripButtonUpload,
             this.toolStripSeparator1,
-            this.toolStripButtonSettings});
+            this.toolStripButtonSettings,
+            this.toolStripButtonPlay,
+            this.toolStripButton2});
 			this.toolStripMain.Location = new System.Drawing.Point(0, 0);
 			this.toolStripMain.Name = "toolStripMain";
-			this.toolStripMain.Size = new System.Drawing.Size(583, 39);
+			this.toolStripMain.Size = new System.Drawing.Size(843, 39);
 			this.toolStripMain.TabIndex = 0;
 			this.toolStripMain.Text = "toolStrip1";
 			// 
@@ -103,9 +107,10 @@
             this.fileID,
             this.FileName,
             this.PathFromFolder});
-			this.listViewFiles.Location = new System.Drawing.Point(12, 42);
+			this.listViewFiles.Location = new System.Drawing.Point(16, 52);
+			this.listViewFiles.Margin = new System.Windows.Forms.Padding(4);
 			this.listViewFiles.Name = "listViewFiles";
-			this.listViewFiles.Size = new System.Drawing.Size(559, 213);
+			this.listViewFiles.Size = new System.Drawing.Size(810, 297);
 			this.listViewFiles.TabIndex = 1;
 			this.listViewFiles.UseCompatibleStateImageBehavior = false;
 			this.listViewFiles.View = System.Windows.Forms.View.Details;
@@ -131,22 +136,44 @@
 			this.textBoxLog.AcceptsTab = true;
 			this.textBoxLog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxLog.Location = new System.Drawing.Point(13, 262);
+			this.textBoxLog.Location = new System.Drawing.Point(16, 357);
+			this.textBoxLog.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxLog.Multiline = true;
 			this.textBoxLog.Name = "textBoxLog";
 			this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.textBoxLog.Size = new System.Drawing.Size(558, 81);
+			this.textBoxLog.Size = new System.Drawing.Size(809, 105);
 			this.textBoxLog.TabIndex = 2;
+			// 
+			// toolStripButtonPlay
+			// 
+			this.toolStripButtonPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolStripButtonPlay.Font = new System.Drawing.Font("Courier New", 14F);
+			this.toolStripButtonPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButtonPlay.Name = "toolStripButtonPlay";
+			this.toolStripButtonPlay.Size = new System.Drawing.Size(60, 36);
+			this.toolStripButtonPlay.Text = " ⏸ ";
+			this.toolStripButtonPlay.Click += new System.EventHandler(this.toolStripButtonPlay_Click);
+			// 
+			// toolStripButton2
+			// 
+			this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolStripButton2.Font = new System.Drawing.Font("Courier New", 14F);
+			this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButton2.Name = "toolStripButton2";
+			this.toolStripButton2.Size = new System.Drawing.Size(32, 36);
+			this.toolStripButton2.Text = "⏭";
+			this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
 			// 
 			// MainForm
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(583, 347);
+			this.ClientSize = new System.Drawing.Size(843, 475);
 			this.Controls.Add(this.textBoxLog);
 			this.Controls.Add(this.listViewFiles);
 			this.Controls.Add(this.toolStripMain);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.Margin = new System.Windows.Forms.Padding(4);
 			this.Name = "MainForm";
 			this.Text = "Загрузчик файлов";
 			this.toolStripMain.ResumeLayout(false);
@@ -169,6 +196,8 @@
 		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogMain;
 		private System.Windows.Forms.ColumnHeader fileID;
 		private System.Windows.Forms.TextBox textBoxLog;
+		private System.Windows.Forms.ToolStripButton toolStripButtonPlay;
+		private System.Windows.Forms.ToolStripButton toolStripButton2;
 	}
 }
 

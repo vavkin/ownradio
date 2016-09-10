@@ -12,6 +12,8 @@ namespace OwnRadio.DesktopPlayer
 		private MusicUploaderPresenter formLogic;
 		// Логгер
 		private Logger log;
+		// Плеер
+		private TrackPlayer trackPlayer;
 
 		public MainForm()
 		{
@@ -24,6 +26,8 @@ namespace OwnRadio.DesktopPlayer
 			loadData();
 			// Устанавливаем доступность кнопки загрузки на сервер
 			toolStripButtonUpload.Enabled = (listViewFiles.Items.Count > 0);
+
+			trackPlayer = new TrackPlayer(log);
 		}
 
 		// Загружает список файлов из очереди в контрол списка на форме
@@ -50,7 +54,7 @@ namespace OwnRadio.DesktopPlayer
 					listViewFiles.Items.Add(item);
 				}
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				log.Error(ex);
 			}
@@ -120,12 +124,35 @@ namespace OwnRadio.DesktopPlayer
 			{
 				var settingsForm = new SettingsForm();
 				settingsForm.settings = formLogic.settings;
-				settingsForm.ShowDialog();
+				if (settingsForm.ShowDialog() == DialogResult.OK)
+				{
+					trackPlayer?.Dispose();
+					trackPlayer = new TrackPlayer(log);
+				}
 			}
 			catch (Exception ex)
 			{
 				log.Error(ex);
 			}
+		}
+
+		private void toolStripButtonPlay_Click(object sender, EventArgs e)
+		{
+			if (trackPlayer.IsPause)
+			{
+				trackPlayer.Resume();
+				toolStripButtonPlay.Text = " ⏸ ";
+			}
+			else
+			{
+				trackPlayer.Pause();
+				toolStripButtonPlay.Text = " ▶️ ";
+			}
+		}
+
+		private void toolStripButton2_Click(object sender, EventArgs e)
+		{
+			trackPlayer.PlayNextTrack();
 		}
 	}
 }
