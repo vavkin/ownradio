@@ -6,11 +6,16 @@ namespace OwnRadio.Web.Api.Models
 {
 	public class MusicFile
 	{
-		public Guid id { get; set; }			// Идентификатор файла
-		public string fileName { get; set; }	// Имя файла
-		public string path { get; set; }		// Путь к файлу на устройстве пользователя
-		public Guid userId { get; set; }		// Идентификатор пользователя
-		private string connectionString;		// Строка подключения к БД
+		// Идентификатор файла
+		public Guid id { get; set; }
+		// Путь к файлу на устройстве пользователя
+		public string localDevicePathUpload { get; set; }
+		// Путь хранения файлана сервере
+		public string path { get; set; }
+		// Идентификатор пользователя		
+		public Guid userId { get; set; }
+		// Строка подключения к БД
+		private string connectionString;
 
 		// Конструктор - инициализация данных
 		public MusicFile(string connectionString)
@@ -33,7 +38,7 @@ namespace OwnRadio.Web.Api.Models
 				npgSqlCommand.CommandType = CommandType.StoredProcedure;
 				// Добавляем параметры
 				npgSqlCommand.Parameters.AddWithValue("ID", id);
-				npgSqlCommand.Parameters.AddWithValue("FileName", fileName);
+				npgSqlCommand.Parameters.AddWithValue("LocalDevicePathUpload", localDevicePathUpload);
 				npgSqlCommand.Parameters.AddWithValue("Path", path);
 				npgSqlCommand.Parameters.AddWithValue("UserID", userId);
 				// Открываем соединение

@@ -58,58 +58,58 @@ CREATE INDEX "FKI_User"
   USING btree
   ("UserID");
 
--- Table: public."Track"
+-- Table: "Track"
 
--- DROP TABLE public."Track";
+-- DROP TABLE "Track";
 
-CREATE TABLE public."Track"
+CREATE TABLE "Track"
 (
   "ID" uuid NOT NULL, -- идентификатор
-  "UserID" uuid NOT NULL, -- Загрузивший пользователь
-  "Name" character varying(2048), -- имя файла
+  "UploadUserID" uuid NOT NULL, -- Загрузивший пользователь
+  "LocalDevicePathUpload" character varying(2048), -- имя файла
   "Path" character varying(2048), -- путь на ПК пользователя
   CONSTRAINT "PK_Track" PRIMARY KEY ("ID"),
-  CONSTRAINT "FK_Track_User" FOREIGN KEY ("UserID")
-      REFERENCES public."User" ("ID") MATCH SIMPLE
+  CONSTRAINT "FK_Track_User" FOREIGN KEY ("UploadUserID")
+      REFERENCES "User" ("ID") MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public."Track"
+ALTER TABLE "Track"
   OWNER TO postgres;
-COMMENT ON TABLE public."Track"
+COMMENT ON TABLE "Track"
   IS 'Музыкальный файл';
-COMMENT ON COLUMN public."Track"."ID" IS 'идентификатор';
-COMMENT ON COLUMN public."Track"."UserID" IS 'Загрузивший пользователь';
-COMMENT ON COLUMN public."Track"."Name" IS 'имя файла';
-COMMENT ON COLUMN public."Track"."Path" IS 'путь на ПК пользователя';
+COMMENT ON COLUMN "Track"."ID" IS 'идентификатор';
+COMMENT ON COLUMN "Track"."UploadUserID" IS 'Загрузивший пользователь';
+COMMENT ON COLUMN "Track"."LocalDevicePathUpload" IS 'имя файла';
+COMMENT ON COLUMN "Track"."Path" IS 'путь на ПК пользователя';
 
 
--- Index: public.fki_track_user
+-- Index: "FKI_Track_User"
 
--- DROP INDEX public.fki_track_user;
+-- DROP INDEX "FKI_Track_User";
 
 CREATE INDEX "FKI_Track_User"
-  ON public."Track"
+  ON "Track"
   USING btree
-  ("UserID");
+  ("UploadUserID");
 
--- Function: public.registerfile(uuid, character varying, character varying, uuid)
+-- Function: registerfile(uuid, character varying, character varying, uuid)
 
--- DROP FUNCTION public.registerfile(uuid, character varying, character varying, uuid);
+-- DROP FUNCTION registerfile(uuid, character varying, character varying, uuid);
 
-CREATE OR REPLACE FUNCTION public.registerfile(
+CREATE OR REPLACE FUNCTION registerfile(
     "ID" uuid,
-    "FileName" character varying,
+    "LocalDevicePathUpload" character varying,
     "Path" character varying,
     "UserID" uuid)
   RETURNS void AS
-$BODY$INSERT INTO public."Track"("ID", "UserID", "Name", "Path") 
-VALUES($1, $4, $2, $3);$BODY$
+$BODY$INSERT INTO public."Track"("ID", "LocalDevicePathUpload", "Path", "UploadUserID") 
+VALUES($1, $2, $3, $4);$BODY$
   LANGUAGE sql VOLATILE
   COST 100;
-ALTER FUNCTION public.registerfile(uuid, character varying, character varying, uuid)
+ALTER FUNCTION registerfile(uuid, character varying, character varying, uuid)
   OWNER TO postgres;
   
 INSERT INTO public."User" ("ID", "Name") VALUES ('12345678-1234-1234-1234-123456789012', 'Test User');

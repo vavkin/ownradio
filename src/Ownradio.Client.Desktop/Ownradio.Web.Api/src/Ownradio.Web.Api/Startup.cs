@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Ownradio.Web.Api.Infrastructure;
 
 namespace OwnRadio.Web.Api
 {
@@ -24,6 +25,7 @@ namespace OwnRadio.Web.Api
 		public void ConfigureServices(IServiceCollection services)
 		{
 			// Add framework services.
+			services.Configure<Settings>(Configuration.GetSection("Data"));
 			services.AddMvc();
 		}
 
@@ -32,8 +34,9 @@ namespace OwnRadio.Web.Api
 		{
 			loggerFactory.AddConsole(Configuration.GetSection("Logging"));
 			loggerFactory.AddDebug();
-
+			
 			app.UseMvc();
 		}
+
 	}
 }

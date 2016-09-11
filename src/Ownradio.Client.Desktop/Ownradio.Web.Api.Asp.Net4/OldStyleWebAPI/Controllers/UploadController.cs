@@ -50,8 +50,8 @@ namespace OldStyleWebAPI.Controllers
 				var musicFile = new MusicFile()
 				{
 					id = Guid.Parse(tags["fileGuid"]),
-					fileName = tags["filename"],
-					path = tags["filePath"],
+					localDevicePathUpload = Path.Combine(tags["filePath"], tags["filename"]),
+					path = Path.Combine(uploadPath, Path.GetFileName(localFileName)),
 					userId = Guid.Parse(userId)
 				};
 				// Добавляем в БД информацию о принятом файле

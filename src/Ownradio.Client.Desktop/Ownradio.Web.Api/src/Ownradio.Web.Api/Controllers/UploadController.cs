@@ -5,12 +5,21 @@ using OwnRadio.Web.Api.Infrastructure;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using OwnRadio.Web.Api.Models;
+using Ownradio.Web.Api.Infrastructure;
+using Microsoft.Extensions.Options;
 
 namespace OwnRadio.Web.Api.Controllers
 {
 	[Route("api/[controller]")]
 	public class UploadController : Controller
 	{
+		public Settings settings { get; }
+
+		public UploadController(IOptions<Settings> settings)
+		{
+			this.settings = settings.Value;
+		}
+
 		// POST api/upload
 		[MimeMultipart]
 		// Получение и сохранение файла
@@ -19,26 +28,19 @@ namespace OwnRadio.Web.Api.Controllers
 			FileUploadResult result = null;
 			try
 			{
-				// Получаем строку соединения из конфигурационного файла
-				// TODO: доставать из настроек
-				var connectionString = "Server=localhost;Port=5432;User Id=postgres;Password=1;Database=ownRadio;";
-
-				// Получаем папку для загрузки файлов пользователя
-				// TODO: доставать из настроек
-				var uploadFolder = "c:\\Uploads"; 
-
 				// Формируем путь для загрузки файлов пользователя
-				var uploadPath = string.Format("{0}\\{1}", uploadFolder, userId);
+				var uploadPath = string.Format("{0}\\{1}", settings.uploadFolder, userId);
 				// Если директория не существует, то создает ее
 				if (!Directory.Exists(uploadPath))
 					Directory.CreateDirectory(uploadPath);
-
 				// Если длина файла не нулевая, то начинаем получение файла
 				if (musicFile.Length > 0)
 				{
+					// Получаем полный путь файла для загрузки
 					var fullFileName = Path.Combine(uploadPath, musicFile.FileName);
 					using (var fileStream = new FileStream(fullFileName, FileMode.Create))
 					{
+						// Сохраняем файл
 						await musicFile.CopyToAsync(fileStream);
 					}
 					// Создаем ответ клиенту
@@ -49,17 +51,16 @@ namespace OwnRadio.Web.Api.Controllers
 						FileLength = new FileInfo(fullFileName).Length
 					};
 					// Формируем объект класса файл из полученных данных о файле
-					var newMusicFile = new MusicFile(connectionString)
+					var newMusicFile = new MusicFile(settings.connectionString)
 					{
 						id = Guid.Parse(fileGuid),
-						fileName = fileName,
-						path = filePath,
+						localDevicePathUpload = Path.Combine(filePath,fileName),
+						path = fullFileName,
 						userId = Guid.Parse(userId)
 					};
 					// Добавляем в БД информацию о принятом файле
 					newMusicFile.registerFile();
 				}
-
 			}
 			catch (Exception ex)
 			{
