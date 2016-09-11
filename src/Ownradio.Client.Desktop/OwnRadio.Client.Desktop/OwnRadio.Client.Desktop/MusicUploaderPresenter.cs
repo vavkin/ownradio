@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace OwnRadio.DesktopPlayer
+namespace OwnRadio.Client.Desktop
 {
 	class MusicUploaderPresenter
 	{

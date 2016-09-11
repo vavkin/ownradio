@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OwnRadio.DesktopPlayer
+namespace OwnRadio.Client.Desktop
 {
 	// Класс - информация о музыкальном файле
 	public class MusicFile

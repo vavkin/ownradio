@@ -2,7 +2,7 @@
 using System;
 using System.Configuration;
 
-namespace OwnRadio.DesktopPlayer
+namespace OwnRadio.Client.Desktop
 {
 	// Настройки программы
 	class Settings

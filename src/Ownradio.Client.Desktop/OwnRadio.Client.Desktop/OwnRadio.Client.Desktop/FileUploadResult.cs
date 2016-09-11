@@ -1,4 +1,4 @@
-﻿namespace OwnRadio.DesktopPlayer
+﻿namespace OwnRadio.Client.Desktop
 {
 	// Класс - результат загрузки файла
 	class FileUploadResult

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace OwnRadio.DesktopPlayer
+namespace OwnRadio.Client.Desktop
 {
 	public partial class SettingsForm : Form
 	{

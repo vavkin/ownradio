@@ -7,8 +7,8 @@
     <ProjectGuid>{E5C4DD95-4C24-490D-8B60-D1A49D40C210}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OwnRadio.DesktopPlayer</RootNamespace>
-    <AssemblyName>MusicUploader</AssemblyName>
+    <RootNamespace>OwnRadio.Client.Desktop</RootNamespace>
+    <AssemblyName>Client.Desktop</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

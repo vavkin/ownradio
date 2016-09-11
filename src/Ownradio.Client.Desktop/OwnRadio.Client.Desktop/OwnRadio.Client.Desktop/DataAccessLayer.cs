@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using System.IO;
 using NLog;
 
-namespace OwnRadio.DesktopPlayer
+namespace OwnRadio.Client.Desktop
 {
 	class DataAccessLayer
 	{
