@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicUploader", "MusicUploader\MusicUploader.csproj", "{E5C4DD95-4C24-490D-8B60-D1A49D40C210}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OwnRadio.Client.Desktop", "OwnRadio.Client.Desktop\OwnRadio.Client.Desktop.csproj", "{E5C4DD95-4C24-490D-8B60-D1A49D40C210}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
