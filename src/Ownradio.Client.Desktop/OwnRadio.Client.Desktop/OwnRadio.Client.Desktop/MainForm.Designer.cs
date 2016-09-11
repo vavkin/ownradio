@@ -34,6 +34,9 @@
 			this.toolStripButtonUpload = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolStripButtonSettings = new System.Windows.Forms.ToolStripButton();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolStripButtonPlay = new System.Windows.Forms.ToolStripButton();
+			this.toolStripButtonNext = new System.Windows.Forms.ToolStripButton();
 			this.listViewFiles = new System.Windows.Forms.ListView();
 			this.fileID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.FileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -50,7 +53,10 @@
             this.toolStripButtonSelect,
             this.toolStripButtonUpload,
             this.toolStripSeparator1,
-            this.toolStripButtonSettings});
+            this.toolStripButtonSettings,
+            this.toolStripSeparator2,
+            this.toolStripButtonPlay,
+            this.toolStripButtonNext});
 			this.toolStripMain.Location = new System.Drawing.Point(0, 0);
 			this.toolStripMain.Name = "toolStripMain";
 			this.toolStripMain.Size = new System.Drawing.Size(583, 39);
@@ -93,6 +99,31 @@
 			this.toolStripButtonSettings.Text = "toolStripButtonSettings";
 			this.toolStripButtonSettings.ToolTipText = "Настройки";
 			this.toolStripButtonSettings.Click += new System.EventHandler(this.toolStripButtonSettings_Click);
+			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Size = new System.Drawing.Size(6, 39);
+			// 
+			// toolStripButtonPlay
+			// 
+			this.toolStripButtonPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButtonPlay.Image = global::OwnRadio.Client.Desktop.Properties.Resources.player_pause_1013;
+			this.toolStripButtonPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButtonPlay.Name = "toolStripButtonPlay";
+			this.toolStripButtonPlay.Size = new System.Drawing.Size(36, 36);
+			this.toolStripButtonPlay.Text = "toolStripButton1";
+			this.toolStripButtonPlay.Click += new System.EventHandler(this.toolStripButtonPlay_Click);
+			// 
+			// toolStripButtonNext
+			// 
+			this.toolStripButtonNext.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButtonNext.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonNext.Image")));
+			this.toolStripButtonNext.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButtonNext.Name = "toolStripButtonNext";
+			this.toolStripButtonNext.Size = new System.Drawing.Size(36, 36);
+			this.toolStripButtonNext.Text = "toolStripButtonNext";
+			this.toolStripButtonNext.Click += new System.EventHandler(this.toolStripButtonNext_Click);
 			// 
 			// listViewFiles
 			// 
@@ -169,6 +200,9 @@
 		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogMain;
 		private System.Windows.Forms.ColumnHeader fileID;
 		private System.Windows.Forms.TextBox textBoxLog;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+		private System.Windows.Forms.ToolStripButton toolStripButtonPlay;
+		private System.Windows.Forms.ToolStripButton toolStripButtonNext;
 	}
 }
 

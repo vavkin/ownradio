@@ -1,4 +1,5 @@
 ﻿using NLog;
+using OwnRadio.Client.Desktop.Properties;
 using System;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ namespace OwnRadio.Client.Desktop
 		private MusicUploaderPresenter formLogic;
 		// Логгер
 		private Logger log;
+		// Плеер
+		private TrackPlayer trackPlayer;
 
 		public MainForm()
 		{
@@ -24,6 +27,8 @@ namespace OwnRadio.Client.Desktop
 			loadData();
 			// Устанавливаем доступность кнопки загрузки на сервер
 			toolStripButtonUpload.Enabled = (listViewFiles.Items.Count > 0);
+			// Создаем плеер
+			trackPlayer = new TrackPlayer(log);
 		}
 
 		// Загружает список файлов из очереди в контрол списка на форме
@@ -127,5 +132,25 @@ namespace OwnRadio.Client.Desktop
 				log.Error(ex);
 			}
 		}
+
+		private void toolStripButtonPlay_Click(object sender, EventArgs e)
+		{
+			if (trackPlayer.IsPause)
+			{
+				trackPlayer.Resume();
+				toolStripButtonPlay.Image = Resources.player_pause_1013; ;
+			}
+			else
+			{
+				trackPlayer.Pause();
+				toolStripButtonPlay.Image = Resources.player_play_3566; ;
+			}
+		}
+
+		private void toolStripButtonNext_Click(object sender, EventArgs e)
+		{
+			trackPlayer.PlayNextTrack();
+		}
+
 	}
 }

@@ -104,6 +104,9 @@
     <Compile Include="SettingsForm.Designer.cs">
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="TrackPlayer\TrackInfo.cs" />
+    <Compile Include="TrackPlayer\TrackPlayer.cs" />
+    <Compile Include="TrackPlayer\TrackSource.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -136,6 +139,29 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="WMPLib">
+      <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\advancedsettings_1315.png" />
+    <Content Include="Images\configuration1_3419.png" />
+    <Content Include="Images\folderopenblue_7963.png" />
+    <Content Include="Images\player_next_2227.png" />
+    <Content Include="Images\player_pause_1013.png" />
+    <Content Include="Images\player_pause_1487.png" />
+    <Content Include="Images\player_pause_8134.png" />
+    <Content Include="Images\player_play_3566.png" />
+    <Content Include="Images\uploadsfolder_7773.png" />
+    <Content Include="Images\weather_05_7034.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.102.0\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.102.0\build\net451\System.Data.SQLite.Core.targets')" />

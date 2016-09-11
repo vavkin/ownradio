@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Ownradio.Web.Api.Infrastructure;
+using OwnRadio.Web.Api.Infrastructure;
 using System.IO;
 using Microsoft.AspNetCore.Http;
-using Ownradio.Web.Api.Models;
+using OwnRadio.Web.Api.Models;
 
-namespace Ownradio.Web.Api.Controllers
+namespace OwnRadio.Web.Api.Controllers
 {
 	[Route("api/[controller]")]
 	public class UploadController : Controller

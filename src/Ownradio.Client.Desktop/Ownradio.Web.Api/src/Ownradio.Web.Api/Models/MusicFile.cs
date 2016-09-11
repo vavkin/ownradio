@@ -2,7 +2,7 @@
 using Npgsql;
 using System.Data;
 
-namespace Ownradio.Web.Api.Models
+namespace OwnRadio.Web.Api.Models
 {
 	public class MusicFile
 	{

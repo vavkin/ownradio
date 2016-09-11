@@ -1,4 +1,4 @@
-﻿namespace Ownradio.Web.Api.Infrastructure
+﻿namespace OwnRadio.Web.Api.Infrastructure
 {
 	public class FileUploadResult
 	{
