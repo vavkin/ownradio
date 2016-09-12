@@ -44,7 +44,7 @@
 			this.folderBrowserDialogMain = new System.Windows.Forms.FolderBrowserDialog();
 			this.textBoxLog = new System.Windows.Forms.TextBox();
 			this.toolStripButtonPlay = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonNext = new System.Windows.Forms.ToolStripButton();
 			this.toolStripMain.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -173,26 +173,6 @@
 			this.textBoxLog.Size = new System.Drawing.Size(809, 105);
 			this.textBoxLog.TabIndex = 2;
 			// 
-			// toolStripButtonPlay
-			// 
-			this.toolStripButtonPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolStripButtonPlay.Font = new System.Drawing.Font("Courier New", 14F);
-			this.toolStripButtonPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButtonPlay.Name = "toolStripButtonPlay";
-			this.toolStripButtonPlay.Size = new System.Drawing.Size(60, 36);
-			this.toolStripButtonPlay.Text = " ⏸ ";
-			this.toolStripButtonPlay.Click += new System.EventHandler(this.toolStripButtonPlay_Click);
-			// 
-			// toolStripButton2
-			// 
-			this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolStripButton2.Font = new System.Drawing.Font("Courier New", 14F);
-			this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton2.Name = "toolStripButton2";
-			this.toolStripButton2.Size = new System.Drawing.Size(32, 36);
-			this.toolStripButton2.Text = "⏭";
-			this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
-			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -225,14 +205,9 @@
 		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogMain;
 		private System.Windows.Forms.ColumnHeader fileID;
 		private System.Windows.Forms.TextBox textBoxLog;
-<<<<<<< HEAD:src/Ownradio.Client.Desktop/OwnRadio.Client.Desktop/OwnRadio.Client.Desktop/MainForm.Designer.cs
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 		private System.Windows.Forms.ToolStripButton toolStripButtonPlay;
 		private System.Windows.Forms.ToolStripButton toolStripButtonNext;
-=======
-		private System.Windows.Forms.ToolStripButton toolStripButtonPlay;
-		private System.Windows.Forms.ToolStripButton toolStripButton2;
->>>>>>> origin/master:src/Ownradio.Client.Desktop/MusicUploader/MusicUploader/MainForm.Designer.cs
 	}
 }
 

@@ -95,7 +95,7 @@ namespace OwnRadio.Client.Desktop
 
 		public void Dispose()
 		{
-			player?.close();
+			player.close();
 		}
 	}
 }
