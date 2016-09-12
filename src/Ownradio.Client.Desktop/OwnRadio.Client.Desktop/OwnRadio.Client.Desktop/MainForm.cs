@@ -127,7 +127,7 @@ namespace OwnRadio.Client.Desktop
 				settingsForm.settings = formLogic.settings;
 				if (settingsForm.ShowDialog() == DialogResult.OK)
 				{
-					trackPlayer?.Dispose();
+					trackPlayer.Dispose();
 					trackPlayer = new TrackPlayer(log);
 				}
 			}
