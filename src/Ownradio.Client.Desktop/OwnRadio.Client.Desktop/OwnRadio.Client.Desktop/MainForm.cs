@@ -55,7 +55,7 @@ namespace OwnRadio.Client.Desktop
 					listViewFiles.Items.Add(item);
 				}
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				log.Error(ex);
 			}
@@ -155,6 +155,5 @@ namespace OwnRadio.Client.Desktop
 		{
 			trackPlayer.PlayNextTrack();
 		}
-
 	}
 }
