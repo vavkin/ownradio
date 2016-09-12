@@ -1,9 +1,8 @@
-﻿using Npgsql;
-using System;
-using System.Configuration;
+﻿using System;
+using Npgsql;
 using System.Data;
 
-namespace OldStyleWebAPI.Models
+namespace OwnRadio.Web.Api.Models
 {
 	public class MusicFile
 	{
@@ -19,10 +18,9 @@ namespace OldStyleWebAPI.Models
 		private string connectionString;
 
 		// Конструктор - инициализация данных
-		public MusicFile()
+		public MusicFile(string connectionString)
 		{
-			// Получаем строку соединения из конфигурационного файла
-			connectionString = ConfigurationManager.ConnectionStrings["OwnradioWebApi"].ConnectionString;
+			this.connectionString = connectionString;
 		}
 
 		// Сохранение в БД информации о файле
