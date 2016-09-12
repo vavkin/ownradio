@@ -72,11 +72,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DownloadSound.cs" />
+    <Compile Include="IGetTrack.cs" />
+    <Compile Include="ISetStatusTrack.cs" />
+    <Compile Include="NextTrackID.cs" />
+    <Compile Include="IGetNextTrackID.cs" />
     <Compile Include="ISQLite.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLite_Android.cs" />
+    <Compile Include="StatusTrack.cs" />
+    <Compile Include="Track.cs" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\raw\soad_sky_is_over.mp3" />

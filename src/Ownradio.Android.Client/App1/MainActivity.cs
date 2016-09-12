@@ -6,21 +6,23 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using Android.Media;
-//using System.Net.Http;
-//using Android.Net;
 using System.IO;
-using NLog;
 using System.Collections.Generic;
 using System.Net;
 
 namespace ownradio
 {
-	[Activity(Label = "musicplay", MainLauncher = true, Icon = "@drawable/icon")]
+	[Activity(Label = "OwnRadio", MainLauncher = true, Icon = "@drawable/icon")]
 	public class MainActivity : Activity
 	{
-		bool PlayPauseFlag = false;
 		bool PlayerExistFlag = false; // выбрана ли песня
-		MediaPlayer _player;
+		String FileName;
+		String GUID = "-1";//for the 1st request
+		String DeviceID = "297f55b4-d42c-4e30-b9d7-a802e7b7eed9";
+		String Method = "новых"; // сделать список имеющихся
+		bool ListedTillTheEnd = false;
+		MediaPlayer	Player = new MediaPlayer();
+		ISetStatusTrack StatusTrack = new StatusTrack();
 
 		protected override void OnCreate(Bundle bundle)
 		{
@@ -28,199 +30,93 @@ namespace ownradio
 			SetContentView(Resource.Layout.Main);
 
 			var status = FindViewById<TextView>(Resource.Id.statusBar);
-			var username = FindViewById<EditText>(Resource.Id.txtUsername);
+			var tvDeviceID = FindViewById<EditText>(Resource.Id.txtUsername);
 			var btnPlay = FindViewById<ImageButton>(Resource.Id.Play);
 			var btnFwd = FindViewById<ImageButton>(Resource.Id.Fwd);
 			var btnExit = FindViewById<Button>(Resource.Id.Exit);
 
-			btnFwd.Enabled = false;
+			tvDeviceID.Text = DeviceID;
 
-			string str;
-			List<string> PlayList = new List<string>();
-			bool listedTillTheEnd = false;
-			String GUID = "-1";//for the 1st request
-			//Uri url = new Uri("http://radio.redoc.ru/api/TrackSource/Play?trackId=fe325f78-1688-4bf7-a339-f8f28532bff9");
-			Uri URLRequest;
-			String fileName;
+			btnPlay.Click += BtnPlay_Click;
 
-			//не получится одновременно грузить с сервера по несколько файлов и в том же запросе передавать флаг дослушал/нет//
+			btnFwd.Click += BtnFwd_Click;
 
+			btnExit.Click += BtnExit_Click;
+		}
 
-			//////
-
-			/*		URLRequest = new Uri("http://radio.redoc.ru/api/TrackSource/NextTrack?userId=297f55b4-d42c-4e30-b9d7-a802e7b7eed9&lastTrackId=" + GUID + "&lastTrackMethod=новых&listedTillTheEnd=" + listedTillTheEnd);
-					HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URLRequest);
-					request.Method = "GET";
-					HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-					using (StreamReader stream = new StreamReader(
-						response.GetResponseStream(), System.Text.Encoding.UTF8))
-					{
-						//status.Text = stream.ReadToEnd();
-						str = stream.ReadToEnd();
-						stream.Close();
-					}
-					response.Close();
-					//status.Text += str;
-					//string str = "<NextTrackResponse><Method>новых</Method><TrackId>9e8b3970-cfaf-4f61-a8b6-bdd42402b362</TrackId></NextTrackResponse>"; //response.ToString();
-					String searchString = "\"TrackId\":\"";
-					int startIndex = str.IndexOf(searchString) + searchString.Length;
-					searchString = "\",\"Method\"";
-					int endIndex = str.IndexOf(searchString);
-					GUID = str.Substring(startIndex, endIndex - startIndex);
-					//status.Text += "\n" + substring;
-					Uri downloadURL = new Uri("http://radio.redoc.ru/api/TrackSource/Play?trackId=" + GUID);
-
-					//try
-					//{
-					WebClient webClient = new WebClient();
-					string fileName = Path.GetTempFileName();
-					webClient.DownloadFile(downloadURL, fileName);
-					webClient.Dispose();
-					if (File.Exists(fileName))
-					{
-
-					}
-					else
-					{
-
-					}
-					PlayList.Add(fileName);
-
-
-					/////
-					*/
-
-
-			//}
-			//catch (Exception e)
-			//{
-			//    new AlertDialog.Builder(this)
-			//            .SetNegativeButton("OK", (sender, args) =>
-			//            {
-			//            })
-			//            .SetMessage(e.ToString())
-			//            .SetTitle("Error")
-			//            .Show();
-			//}
-
-			Dictionary<int, int> sounds = new Dictionary<int, int>();
-			sounds.Add(Resource.Raw.soad_sky_is_over, Resource.Raw.piknik_nemnogo_ogna);
-			sounds.Add(Resource.Raw.piknik_nemnogo_ogna, Resource.Raw.godsmack_bleeding_me);
-			sounds.Add(Resource.Raw.godsmack_bleeding_me, Resource.Raw.soad_sky_is_over);
-
-			int idSound = Resource.Raw.soad_sky_is_over;//как получить первый элемент словаря? 
-
-			btnPlay.Click += delegate
+		public void TrackPlay()
+		{
+			var btnPlay = FindViewById<ImageButton>(Resource.Id.Play);
+			if (!PlayerExistFlag)
 			{
-				if (!PlayerExistFlag)
+				IGetNextTrackID NextTrack = new NextTrackID();
+				IGetTrack Track = new Track();
+				GUID = NextTrack.GetNextTrackID(DeviceID, GUID, Method, ListedTillTheEnd);
+				FileName = Track.GetTrack(GUID);
+				Toast.MakeText(this, "SetDataSource", ToastLength.Short).Show();
+				PlayerExistFlag = true;
+				//Player = new MediaPlayer();
+				Player.Reset();
+				Player.SetDataSource(FileName);
+				Player.Prepared += (s, e1) =>
 				{
-					///////
-
-					URLRequest = new Uri("http://radio.redoc.ru/api/TrackSource/NextTrack?userId=297f55b4-d42c-4e30-b9d7-a802e7b7eed9&lastTrackId=" + GUID + "&lastTrackMethod=новых&listedTillTheEnd=" + listedTillTheEnd);
-					HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URLRequest);
-					request.Method = "GET";
-					HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-					using (StreamReader stream = new StreamReader(
-						response.GetResponseStream(), System.Text.Encoding.UTF8))
-					{
-						//status.Text = stream.ReadToEnd();
-						str = stream.ReadToEnd();
-						stream.Close();
-					}
-					response.Close();
-					//status.Text += str;
-					//string str = "<NextTrackResponse><Method>новых</Method><TrackId>9e8b3970-cfaf-4f61-a8b6-bdd42402b362</TrackId></NextTrackResponse>"; //response.ToString();
-					String searchString = "\"TrackId\":\"";
-					int startIndex = str.IndexOf(searchString) + searchString.Length;
-					searchString = "\",\"Method\"";
-					int endIndex = str.IndexOf(searchString);
-					GUID = str.Substring(startIndex, endIndex - startIndex);
-					//status.Text += "\n" + substring;
-					Uri downloadURL = new Uri("http://radio.redoc.ru/api/TrackSource/Play?trackId=" + GUID);
-
-					//try
-					//{
-					WebClient webClient = new WebClient();
-					fileName = Path.GetTempFileName();
-					webClient.DownloadFile(downloadURL, fileName);
-					webClient.Dispose();
-					if (File.Exists(fileName))
-					{
-
-					}
-					else
-					{
-
-					}
-					PlayList.Add(fileName);
-
-					///
-
-					Toast.MakeText(this, "SetDataSource", ToastLength.Short).Show();
-					PlayerExistFlag = true;
-					_player = new MediaPlayer();
-
-					//var fd = Resources.OpenRawResourceFd(idSound);
-					//_player.SetDataSource(fd.FileDescriptor, fd.StartOffset, fd.Length);
-					_player.SetDataSource(fileName);
-					_player.Prepared += (s, e) =>
-					{
-						_player.Start();
-					};
-					_player.Prepare();
-					btnFwd.Enabled = true;
-
-
-
-				}
-
-				if (PlayPauseFlag)
-				{
-					Toast.MakeText(this, "Нажата кнопка пауза, флаг=" + PlayPauseFlag, ToastLength.Short).Show();
-
-					if (_player.IsPlaying)
-						_player.Pause();
-					btnPlay.SetBackgroundResource(Resource.Drawable.pause);
-				}
-				else
-				{
-					Toast.MakeText(this, "Нажата кнопка проиграть, флаг=" + PlayPauseFlag, ToastLength.Short).Show();
-					if (!_player.IsPlaying)
-					{
-						_player.Start();
-					}
-
-					btnPlay.SetBackgroundResource(Resource.Drawable.play);
-				}
-
-				PlayPauseFlag = !PlayPauseFlag;
-			};
-
-			btnFwd.Click += delegate
+					Player.Start();
+				};
+				Player.Prepare();
+				Player.Completion += Player_Completion;
+			}
+			if (Player.IsPlaying)
 			{
-				Toast.MakeText(this, "Нажата кнопка пропустить", ToastLength.Short).Show();
-				PlayerExistFlag = false;
-				PlayPauseFlag = false;
-				//status.Text += "Button Forward is pressed";
-				_player.Stop();
-				_player.Release();
-				idSound = sounds[idSound];
-				btnPlay.CallOnClick();
-			};
-			btnExit.Click += delegate
+				Toast.MakeText(this, "Пауза", ToastLength.Short).Show();
+				Player.Pause();
+				btnPlay.SetBackgroundResource(Resource.Drawable.pause);
+			}
+			else
 			{
-				//File.Delete(fileName);
-				//DirectoryInfo dirInfo = new DirectoryInfo();
-				//foreach (FileInfo file in dirInfo.GetFiles())
-				//{
-				//	file.Delete();
-				//}
-				//Toast.MakeText(this, "Временный файл удален", ToastLength.Short).Show();
-				System.Environment.Exit(0);
-			};
+				Toast.MakeText(this, "Проигрывание", ToastLength.Short).Show();
+				Player.Start();
+				btnPlay.SetBackgroundResource(Resource.Drawable.play);
+			}
+		}
+
+
+
+
+		private void BtnPlay_Click(object sender, EventArgs e)
+		{
+			Toast.MakeText(this, "Нажата кнопка проиграть/пауза", ToastLength.Short).Show();
+			TrackPlay();
+		}
+
+		private void BtnFwd_Click(object sender, EventArgs e)
+		{
+			Toast.MakeText(this, "Нажата кнопка пропустить", ToastLength.Short).Show();
+			PlayerExistFlag = false;
+			if (Player.IsPlaying)
+				Player.Stop();
+			ListedTillTheEnd = false;
+			StatusTrack.SetStatusTrack(DeviceID, GUID, ListedTillTheEnd, DateTime.Now);
+			TrackPlay();
+		}
+
+		private void Player_Completion(object sender, EventArgs e)
+		{
+			Toast.MakeText(this, "Запущена следующая песня", ToastLength.Short).Show();
+			PlayerExistFlag = false;
+			ListedTillTheEnd = true;
+			StatusTrack.SetStatusTrack(DeviceID, GUID, ListedTillTheEnd, DateTime.Now);
+			TrackPlay();
+		}
+
+		private void BtnExit_Click(object sender, EventArgs e)
+		{
+			DirectoryInfo dirInfo = new DirectoryInfo(Path.GetDirectoryName(Path.GetTempFileName()));
+			foreach (FileInfo file in dirInfo.GetFiles())
+			{
+				file.Delete();
+			}
+			System.Environment.Exit(0);
 		}
 	}
-
-
 }
 
