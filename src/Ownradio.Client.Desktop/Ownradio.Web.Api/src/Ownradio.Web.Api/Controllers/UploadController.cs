@@ -29,7 +29,7 @@ namespace OwnRadio.Web.Api.Controllers
 			try
 			{
 				// Формируем путь для загрузки файлов пользователя
-				var uploadPath = string.Format("{0}\\{1}", settings.uploadFolder, userId);
+				var uploadPath = Path.Combine(settings.uploadFolder, userId);
 				// Если директория не существует, то создает ее
 				if (!Directory.Exists(uploadPath))
 					Directory.CreateDirectory(uploadPath);
