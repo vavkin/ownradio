@@ -94,10 +94,54 @@ CREATE INDEX "FKI_Track_User"
   ON "Track"
   USING btree
   ("UploadUserID");
+  
+-- Table: "History"
 
--- Function: registerfile(uuid, character varying, character varying, uuid)
+-- DROP TABLE "History";
 
--- DROP FUNCTION registerfile(uuid, character varying, character varying, uuid);
+CREATE TABLE "History"
+(
+  "ID" uuid NOT NULL DEFAULT uuid_generate_v4(),
+  "UserID" uuid NOT NULL,
+  "TrackID" uuid NOT NULL,
+  "LastListenDateTime" timestamp with time zone NOT NULL DEFAULT now(), -- Время прослушивания
+  CONSTRAINT "PK_History" PRIMARY KEY ("ID"),
+  CONSTRAINT "FK_History_Track" FOREIGN KEY ("TrackID")
+      REFERENCES "Track" ("ID") MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT "FK_History_User" FOREIGN KEY ("UserID")
+      REFERENCES "User" ("ID") MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE "History"
+  OWNER TO postgres;
+COMMENT ON TABLE "History"
+  IS 'История прослушивания';
+COMMENT ON COLUMN "History"."LastListenDateTime" IS 'Время прослушивания';
+
+
+-- Index: "FKI_History_Track"
+
+-- DROP INDEX "FKI_History_Track";
+
+CREATE INDEX "FKI_History_Track"
+  ON "History"
+  USING btree
+  ("TrackID");
+
+-- Index: "FKI_History_User"
+
+-- DROP INDEX "FKI_History_User";
+
+CREATE INDEX "FKI_History_User"
+  ON "History"
+  USING btree
+  ("UserID");
+
+
 
 -- Function: registerfile(uuid, character varying, character varying, uuid)
 
@@ -109,16 +153,20 @@ CREATE OR REPLACE FUNCTION registerfile(
     "Path" character varying,
     "UserID" uuid)
   RETURNS void AS
-$BODY$INSERT INTO public."User" ("ID","Name")
+$BODY$INSERT INTO "User" ("ID","Name")
 SELECT $4, 'Anonymous new user'
-WHERE NOT EXISTS(SELECT * FROM public."User" WHERE "ID"=$4);
+WHERE NOT EXISTS(SELECT * FROM "User" WHERE "ID"=$4);
 
-INSERT INTO public."Track"("ID", "LocalDevicePathUpload", "Path", "UploadUserID") 
-VALUES($1, $2, $3, $4);$BODY$
+INSERT INTO "Track"("ID", "LocalDevicePathUpload", "Path", "UploadUserID") 
+VALUES($1, $2, $3, $4);
+
+INSERT INTO "History"("UserID","TrackID")
+VALUES($4,$1)$BODY$
   LANGUAGE sql VOLATILE
   COST 100;
 ALTER FUNCTION registerfile(uuid, character varying, character varying, uuid)
   OWNER TO postgres;
+
 
   
 INSERT INTO public."User" ("ID", "Name") VALUES ('12345678-1234-1234-1234-123456789012', 'Test User');
