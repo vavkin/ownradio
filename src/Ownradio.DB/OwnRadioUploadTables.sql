@@ -99,18 +99,27 @@ CREATE INDEX "FKI_Track_User"
 
 -- DROP FUNCTION registerfile(uuid, character varying, character varying, uuid);
 
+-- Function: registerfile(uuid, character varying, character varying, uuid)
+
+-- DROP FUNCTION registerfile(uuid, character varying, character varying, uuid);
+
 CREATE OR REPLACE FUNCTION registerfile(
     "ID" uuid,
     "LocalDevicePathUpload" character varying,
     "Path" character varying,
     "UserID" uuid)
   RETURNS void AS
-$BODY$INSERT INTO public."Track"("ID", "LocalDevicePathUpload", "Path", "UploadUserID") 
+$BODY$INSERT INTO public."User" ("ID","Name")
+SELECT $4, 'Anonymous new user'
+WHERE NOT EXISTS(SELECT * FROM public."User" WHERE "ID"=$4);
+
+INSERT INTO public."Track"("ID", "LocalDevicePathUpload", "Path", "UploadUserID") 
 VALUES($1, $2, $3, $4);$BODY$
   LANGUAGE sql VOLATILE
   COST 100;
 ALTER FUNCTION registerfile(uuid, character varying, character varying, uuid)
   OWNER TO postgres;
+
   
 INSERT INTO public."User" ("ID", "Name") VALUES ('12345678-1234-1234-1234-123456789012', 'Test User');
 INSERT INTO public."Device" ("ID", "UserID", "Name") VALUES ('00000000-0000-0000-0000-000000000000', '12345678-1234-1234-1234-123456789012', 'TEST-USER-PC');
