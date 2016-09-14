@@ -259,3 +259,7 @@ paket-files/
 __pycache__/
 *.pyc
 packages
+
+
+#MacOS ignore DS-Store folders
+.DS_Store
