@@ -59,7 +59,7 @@ namespace OwnRadio.Web.Api.Controllers
 						userId = Guid.Parse(userId)
 					};
 					// Добавляем в БД информацию о принятом файле
-					newMusicFile.registerFile();
+					newMusicFile.registerTrack();
 				}
 			}
 			catch (Exception ex)
