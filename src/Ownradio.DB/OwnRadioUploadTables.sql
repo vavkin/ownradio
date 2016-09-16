@@ -10,164 +10,238 @@ CREATE DATABASE "ownRadio"
     LC_CTYPE = 'Russian_Russia.1251'
     TABLESPACE = pg_default
     CONNECTION LIMIT = -1;
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------	
+----------------------------------------------------------------------------------------
+-- Р РµРіРёСЃС‚СЂРёСЂСѓРµРј СЂР°СЃС€РёСЂРµРЅРёРµ uuid-ossp - РіРµРЅРµСЂР°С‚РѕСЂ РіСѓРёРґРѕРІ
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------	
+----------------------------------------------------------------------------------------
 
--- Table: public."User"
+-- Table: ownuser
 
--- DROP TABLE public."User";
+-- DROP TABLE ownuser;
 
-CREATE TABLE public."User"
+CREATE TABLE ownuser
 (
-  "ID" uuid NOT NULL,
-  "Name" character varying(100) NOT NULL,
-  CONSTRAINT "PK_Users" PRIMARY KEY ("ID")
+  id uuid NOT NULL,
+  username character varying(100) NOT NULL,
+  CONSTRAINT pk_users PRIMARY KEY (id)
 )
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public."User"
+ALTER TABLE ownuser
   OWNER TO postgres;
-
-  -- Table: public."Device"
-
--- DROP TABLE public."Device";
-
-CREATE TABLE public."Device"
-(
-  "ID" uuid NOT NULL, -- Device ID
-  "UserID" uuid,
-  "Name" character varying(100),
-  CONSTRAINT "PK_Device" PRIMARY KEY ("ID"),
-  CONSTRAINT "FK_User" FOREIGN KEY ("UserID")
-      REFERENCES public."User" ("ID") MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE public."Device"
-  OWNER TO postgres;
-COMMENT ON COLUMN public."Device"."ID" IS 'Device ID';
-
-
--- Index: public.fki_user
-
--- DROP INDEX public.fki_user;
-
-CREATE INDEX "FKI_User"
-  ON public."Device"
-  USING btree
-  ("UserID");
-
--- Table: "Track"
-
--- DROP TABLE "Track";
-
-CREATE TABLE "Track"
-(
-  "ID" uuid NOT NULL, -- идентификатор
-  "UploadUserID" uuid NOT NULL, -- Загрузивший пользователь
-  "LocalDevicePathUpload" character varying(2048), -- имя файла
-  "Path" character varying(2048), -- путь на ПК пользователя
-  CONSTRAINT "PK_Track" PRIMARY KEY ("ID"),
-  CONSTRAINT "FK_Track_User" FOREIGN KEY ("UploadUserID")
-      REFERENCES "User" ("ID") MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE "Track"
-  OWNER TO postgres;
-COMMENT ON TABLE "Track"
-  IS 'Музыкальный файл';
-COMMENT ON COLUMN "Track"."ID" IS 'идентификатор';
-COMMENT ON COLUMN "Track"."UploadUserID" IS 'Загрузивший пользователь';
-COMMENT ON COLUMN "Track"."LocalDevicePathUpload" IS 'имя файла';
-COMMENT ON COLUMN "Track"."Path" IS 'путь на ПК пользователя';
-
-
--- Index: "FKI_Track_User"
-
--- DROP INDEX "FKI_Track_User";
-
-CREATE INDEX "FKI_Track_User"
-  ON "Track"
-  USING btree
-  ("UploadUserID");
   
--- Table: "History"
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------	
+----------------------------------------------------------------------------------------
+-- Table: device
 
--- DROP TABLE "History";
+-- DROP TABLE device;
 
-CREATE TABLE "History"
+CREATE TABLE device
 (
-  "ID" uuid NOT NULL DEFAULT uuid_generate_v4(),
-  "UserID" uuid NOT NULL,
-  "TrackID" uuid NOT NULL,
-  "LastListenDateTime" timestamp with time zone NOT NULL DEFAULT now(), -- Время прослушивания
-  CONSTRAINT "PK_History" PRIMARY KEY ("ID"),
-  CONSTRAINT "FK_History_Track" FOREIGN KEY ("TrackID")
-      REFERENCES "Track" ("ID") MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT "FK_History_User" FOREIGN KEY ("UserID")
-      REFERENCES "User" ("ID") MATCH SIMPLE
+  id uuid NOT NULL,
+  userid uuid,
+  devicename character varying(100),
+  CONSTRAINT pk_device PRIMARY KEY (id),
+  CONSTRAINT fk_user FOREIGN KEY (userid)
+      REFERENCES ownuser (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE "History"
+ALTER TABLE public.device
   OWNER TO postgres;
-COMMENT ON TABLE "History"
-  IS 'История прослушивания';
-COMMENT ON COLUMN "History"."LastListenDateTime" IS 'Время прослушивания';
 
+-- Index: fki_user
 
--- Index: "FKI_History_Track"
+-- DROP INDEX fki_user;
 
--- DROP INDEX "FKI_History_Track";
-
-CREATE INDEX "FKI_History_Track"
-  ON "History"
+CREATE INDEX fki_user
+  ON device
   USING btree
-  ("TrackID");
+  (userid);
 
--- Index: "FKI_History_User"
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------	
+----------------------------------------------------------------------------------------
+-- Table: track
 
--- DROP INDEX "FKI_History_User";
+-- DROP TABLE track;
 
-CREATE INDEX "FKI_History_User"
-  ON "History"
+CREATE TABLE track
+(
+  id uuid NOT NULL,
+  uploaduserid uuid NOT NULL,
+  localdevicepathupload character varying(2048),
+  path character varying(2048),
+  uploaddatetime timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT pk_track PRIMARY KEY (id),
+  CONSTRAINT fk_track_user FOREIGN KEY (uploaduserid)
+      REFERENCES ownuser (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE track
+  OWNER TO postgres;
+
+-- Index: fki_track_user
+
+-- DROP INDEX fki_track_user;
+
+CREATE INDEX fki_track_user
+  ON track
   USING btree
-  ("UserID");
+  (uploaduserid);
+  
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------	
+----------------------------------------------------------------------------------------
+-- Table: history
 
+-- DROP TABLE history;
 
+CREATE TABLE history
+(
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  userid uuid NOT NULL,
+  trackid uuid NOT NULL,
+  listendatetime timestamp with time zone NOT NULL DEFAULT now(),
+  islisten integer,
+  method character varying(50),
+  CONSTRAINT pk_history PRIMARY KEY (id),
+  CONSTRAINT fk_history_track FOREIGN KEY (trackid)
+      REFERENCES track (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_history_user FOREIGN KEY (userid)
+      REFERENCES ownuser (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE history
+  OWNER TO postgres;
 
--- Function: registerfile(uuid, character varying, character varying, uuid)
+-- Index: fki_history_track
 
--- DROP FUNCTION registerfile(uuid, character varying, character varying, uuid);
+-- DROP INDEX fki_history_track;
 
-CREATE OR REPLACE FUNCTION registerfile(
-    "ID" uuid,
-    "LocalDevicePathUpload" character varying,
-    "Path" character varying,
-    "UserID" uuid)
+CREATE INDEX fki_history_track
+  ON history
+  USING btree
+  (trackid);
+
+-- Index: fki_history_user
+
+-- DROP INDEX fki_history_user;
+
+CREATE INDEX fki_history_user
+  ON history
+  USING btree
+  (userid);
+  
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------	
+----------------------------------------------------------------------------------------
+-- Table: rating
+
+-- DROP TABLE rating;
+
+CREATE TABLE rating
+(
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  userid uuid NOT NULL,
+  trackid uuid NOT NULL,
+  lastlistendatetime timestamp with time zone NOT NULL DEFAULT now(),
+  rating integer NOT NULL DEFAULT 0,
+  CONSTRAINT pk_rating PRIMARY KEY (id),
+  CONSTRAINT fk_rating_track FOREIGN KEY (trackid)
+      REFERENCES track (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_rating_user FOREIGN KEY (userid)
+      REFERENCES ownuser (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE rating
+  OWNER TO postgres;
+COMMENT ON TABLE rating
+  IS 'Р РµР№С‚РёРЅРі';
+
+-- Index: fki_rating_track
+
+-- DROP INDEX fki_rating_track;
+
+CREATE INDEX fki_rating_track
+  ON rating
+  USING btree
+  (trackid);
+
+-- Index: fki_rating_user
+
+-- DROP INDEX fki_rating_user;
+
+CREATE INDEX fki_rating_user
+  ON public.rating
+  USING btree
+  (userid);
+
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------	
+----------------------------------------------------------------------------------------
+-- Function: registertrack(uuid, character varying, character varying, uuid)
+
+-- DROP FUNCTION registertrack(uuid, character varying, character varying, uuid);
+
+CREATE OR REPLACE FUNCTION registertrack(
+    trackid uuid,
+    localdevicepathupload character varying,
+    path character varying,
+    userid uuid)
   RETURNS void AS
-$BODY$INSERT INTO "User" ("ID","Name")
-SELECT $4, 'Anonymous new user'
-WHERE NOT EXISTS(SELECT * FROM "User" WHERE "ID"=$4);
+$BODY$
+-- 
+-- Р¤СѓРЅРєС†РёСЏ РґРѕР±Р°РІР»СЏРµС‚ Р·Р°РїРёСЃСЊ Рѕ С‚СЂРµРєРµ РІ С‚Р°Р±Р»РёС†Сѓ С‚СЂРµРєРѕРІ Рё РґРµР»Р°РµС‚ СЃРѕРїСѓС‚СЃС‚РІСѓСЋС‰РёРµ Р·Р°РїРёСЃРё РІ
+-- С‚Р°Р±Р»РёС†Сѓ СЃС‚Р°С‚РёСЃС‚РёРєРё РїСЂРѕСЃР»СѓС€РёРІР°РЅРёСЏ Рё СЂРµР№С‚РёРЅРіРѕРІ. Р•СЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ, Р·Р°РіСЂСѓР¶Р°СЋС‰РµРіРѕ С‚СЂРµРє 
+-- РЅРµС‚ РІ Р±Р°Р·Рµ, С‚Рѕ РѕРЅ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РІ С‚Р°Р±Р»РёС†Сѓ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№.
+--
 
-INSERT INTO "Track"("ID", "LocalDevicePathUpload", "Path", "UploadUserID") 
-VALUES($1, $2, $3, $4);
+-- Р”РѕР±Р°РІР»СЏРµРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ, РµСЃР»Рё РµРіРѕ РµС‰Рµ РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚
+INSERT INTO ownuser (id,username)
+SELECT userid, 'Anonymous new user'
+WHERE NOT EXISTS(SELECT * FROM ownuser WHERE id=userid);
 
-INSERT INTO "History"("UserID","TrackID")
-VALUES($4,$1)$BODY$
+-- Р”РѕР±Р°РІР»СЏРµРј С‚СЂРµРє РІ Р±Р°Р·Сѓ РґР°РЅРЅС‹С…
+INSERT INTO track(id, localdevicepathupload, path, uploaduserid) 
+VALUES(trackid, localdevicepathupload, path, userid);
+
+-- Р”РѕР±Р°РІР»СЏРµРј Р·Р°РїРёСЃСЊ Рѕ РїСЂРѕСЃР»СѓС€РёРІР°РЅРёРё С‚СЂРµРєР° РІ С‚Р°Р±Р»РёС†Сѓ РёСЃС‚РѕСЂРёРё РїСЂРѕСЃР»СѓС€РёРІР°РЅРёСЏ
+INSERT INTO history(userid,trackid)
+VALUES(userid,trackid);
+
+-- Р”РѕР±Р°РІР»СЏРµРј Р·Р°РїРёСЃСЊ РІ С‚Р°Р±Р»РёС†Сѓ СЂРµР№С‚РёРЅРіРѕРІ
+INSERT INTO rating(userid, trackid, rating)
+VALUES(userid, trackid, 1);
+
+$BODY$
   LANGUAGE sql VOLATILE
   COST 100;
-ALTER FUNCTION registerfile(uuid, character varying, character varying, uuid)
+ALTER FUNCTION registertrack(uuid, character varying, character varying, uuid)
   OWNER TO postgres;
 
-
+----------------------------------------------------------------------------------------	
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------	
   
-INSERT INTO public."User" ("ID", "Name") VALUES ('12345678-1234-1234-1234-123456789012', 'Test User');
-INSERT INTO public."Device" ("ID", "UserID", "Name") VALUES ('00000000-0000-0000-0000-000000000000', '12345678-1234-1234-1234-123456789012', 'TEST-USER-PC');
+INSERT INTO ownuser (id, username) VALUES ('12345678-1234-1234-1234-123456789012', 'Test User');
+INSERT INTO device (id, userid, devicename) VALUES ('00000000-0000-0000-0000-000000000000', '12345678-1234-1234-1234-123456789012', 'TEST-USER-PC');
