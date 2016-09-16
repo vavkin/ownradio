@@ -12,26 +12,32 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/txtUsername" />
+        android:id="@+id/txtDeviceID" />
     <ImageButton
         android:id="@+id/Play"
         android:layout_width="100.0dp"
         android:layout_height="100.0dp"
-        android:background="@drawable/btn_play_selector"
+        android:background="@drawable/play"
         android:onClick="onClick"
         android:layout_gravity="center"
         android:layout_marginTop="10dp" />
     <ImageButton
-        android:id="@+id/Fwd"
+        android:id="@+id/Next"
         android:layout_width="100.0dp"
         android:layout_height="100.0dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/fwd"
+        android:background="@drawable/next"
         android:layout_gravity="center" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/statusBar" />
+    <Button
+        android:text="ShowDB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ShowDB"
+        android:layout_gravity="bottom" />
     <Button
         android:text="Exit"
         android:layout_width="match_parent"

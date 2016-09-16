@@ -15,9 +15,11 @@ namespace ownradio
 	class StatusTrack : ISetStatusTrack
 	{
 		public StatusTrack() { }
+
 		public void SetStatusTrack(String DeviceID, String TrackID, bool ListenYesNo, DateTime DateTimeListen)
 		{
-
+			ISQLite db = new SQLite_Android();
+			db.AddStatusToDB(DeviceID, TrackID, ListenYesNo, DateTimeListen);
 		}
 	}
 }

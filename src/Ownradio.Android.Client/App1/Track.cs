@@ -22,18 +22,14 @@ namespace ownradio
 		public String GetTrack(String GUID)
 		{
 			Uri downloadURL = new Uri("http://radio.redoc.ru/api/TrackSource/Play?trackId=" + GUID);
-
 			WebClient webClient = new WebClient();
 			String fileName = Path.GetTempFileName();
+			fileName = fileName.Replace(".tmp", ".mp3");
 			webClient.DownloadFile(downloadURL, fileName);
 			webClient.Dispose();
-			if (File.Exists(fileName))
+			if (File.Exists(fileName) == false)
 			{
-
-			}
-			else
-			{
-
+				throw new Exception("Не смогли скачать файл с id = " + GUID);
 			}
 			return fileName;
 		}

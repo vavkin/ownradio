@@ -27,7 +27,7 @@ namespace ownradio
 		/// <returns>ID следующего трэка</returns>
 		public String GetNextTrackID(String DeviceID, String GUID, String Method, bool ListedTillTheEnd)
 		{
-			Uri URLRequest = new Uri("http://radio.redoc.ru/api/TrackSource/NextTrack?userId=" + DeviceID + "&lastTrackId=" + GUID + "&lastTrackMethod=" + Method + "&listedTillTheEnd=" + ListedTillTheEnd);
+			Uri URLRequest = new Uri("http://radio.redoc.ru/api/TrackSource/NextTrack?userId=" + DeviceID + "&lastTrackId=" + GUID + "&lastTrackMethod=" + System.Net.WebUtility.UrlEncode(Method) + "&listedTillTheEnd=" + ListedTillTheEnd);
 			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URLRequest);
 			request.Method = "GET";
 			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
