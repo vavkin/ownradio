@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="DeviceID"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/TextViewDeviceID" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/EditTextDeviceID" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <TextView
+            android:text="UserID"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/TextViewUserID" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/EditTextUserID" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <TextView
+            android:text="Name"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/TextViewName" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/EditTextName" />
+        <Button
+            android:text="Save"
+            android:id="@+id/SaveName"
+            android:textSize="10dp"
+            android:gravity="right"
+            android:layout_width="50.0dp"
+            android:layout_height="50.0dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <Button
+            android:id="@+id/Play"
+            android:text="Play/Pause"
+            android:layout_width="100.0dp"
+            android:layout_height="100.0dp"
+            android:onClick="onClick"
+            android:layout_marginTop="10dp" />
+        <Button
+            android:id="@+id/Next"
+            android:text="Next"
+            android:layout_width="100.0dp"
+            android:layout_height="100.0dp"
+            android:layout_marginTop="10dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/TrackInfo"
+            android:scrollbars="vertical"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp" />
+    </LinearLayout>
+</LinearLayout>
