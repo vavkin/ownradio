@@ -24,23 +24,23 @@ namespace OwnRadio.Web.Api.Models
 		}
 
 		// Сохранение в БД информации о файле
-		internal void registerFile()
+		internal void registerTrack()
 		{
 			using (var npgSqlConnection = new NpgsqlConnection(connectionString))
 			{
 				// Создаем комманду - с регистром имени функции проблема: не видит
 				var npgSqlCommand = new NpgsqlCommand();
 				// Указываем имя хранимой процедуры (функции)
-				npgSqlCommand.CommandText = "RegisterFile";
+				npgSqlCommand.CommandText = "registertrack";
 				// Указываем подключение
 				npgSqlCommand.Connection = npgSqlConnection;
 				// Уточняем тип комманды - хранимая процедура
 				npgSqlCommand.CommandType = CommandType.StoredProcedure;
 				// Добавляем параметры
-				npgSqlCommand.Parameters.AddWithValue("ID", id);
-				npgSqlCommand.Parameters.AddWithValue("LocalDevicePathUpload", localDevicePathUpload);
-				npgSqlCommand.Parameters.AddWithValue("Path", path);
-				npgSqlCommand.Parameters.AddWithValue("UserID", userId);
+				npgSqlCommand.Parameters.AddWithValue("trackid", id);
+				npgSqlCommand.Parameters.AddWithValue("localdevicepathupload", localDevicePathUpload);
+				npgSqlCommand.Parameters.AddWithValue("path", path);
+				npgSqlCommand.Parameters.AddWithValue("userid", userId);
 				// Открываем соединение
 				npgSqlConnection.Open();
 				// Выполняем хранимую процедуру (функцию)
