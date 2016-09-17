@@ -263,3 +263,4 @@ packages
 
 #MacOS ignore DS-Store folders
 .DS_Store
+src/Ownradio.Client.Desktop/Ownradio.Web.Api.Asp.Net4/OldStyleWebAPI/App_Data/ce0cc444-9bb6-4092-a6f0-a7838ad98000/
