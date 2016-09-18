@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using OwnRadio.Web.Api.Infrastructure;
 using OwnRadio.Web.Api.Models;
 using System;
+using System.Net;
 
 namespace OwnRadio.Web.Api.Controllers
 {
@@ -38,6 +39,17 @@ namespace OwnRadio.Web.Api.Controllers
 			Response.ContentLength = stream.Length;
 			// Возвращаем поток audio/mpeg
 			return new FileStreamResult(stream, "audio/mpeg");
+		}
+
+		// Устанавливает статус прослушивания трека
+		// GET api/track/GetNextTrackID/12345678-1234-1234-1234-123456789012
+		[HttpGet("{DeviceID},{trackID},{IsListen},{DateTimeListen}")]
+		public int SetStatusTrack(Guid DeviceID, Guid TrackID, int IsListen, DateTime DateTimeListen)
+		{
+			// Получаем путь к треку
+			var track = new Track(settings.connectionString);
+			var rowsCount = track.SetStatusTrack(DeviceID, TrackID, IsListen, DateTimeListen);
+			return rowsCount;
 		}
 	}
 }
