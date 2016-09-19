@@ -19,19 +19,25 @@ namespace OwnRadio
 		public Track()
 		{ }
 
-		public String GetTrack(String GUID)
+		public String GetTrackByID(String TrackID)
 		{
-			Uri downloadURL = new Uri("http://radio.redoc.ru/api/TrackSource/Play?trackId=" + GUID);
+			Uri downloadURL = new Uri("http://10.10.0.45:5000/api/track/GetTrackByID/" + TrackID);
 			WebClient webClient = new WebClient();
 			String fileName = Path.GetTempFileName();
 			fileName = fileName.Replace(".tmp", ".mp3");
 			webClient.DownloadFile(downloadURL, fileName);
+			webClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
 			webClient.Dispose();
 			if (File.Exists(fileName) == false)
 			{
-				throw new Exception("Не смогли скачать файл с id = " + GUID);
+				throw new Exception("Не смогли скачать файл с id = " + TrackID);
 			}
 			return fileName;
+		}
+
+		private void WebClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

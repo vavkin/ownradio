@@ -14,6 +14,6 @@ namespace OwnRadio
 {
 	public interface IGetTrack
 	{
-		String GetTrack(String GUID);
+		String GetTrackByID(String TrackID);
 	}
 }

@@ -54,20 +54,20 @@ namespace OwnRadio
 		}
 
 
-		public void CreateTableTrack(String ID, string DateTimeListen)
+		public void CreateTableTrack(String ID, String DateTimeListen)
 		{
 			var db = GetConnection("ownradio.db");
 			var toTrack = new track { id = ID, datetimelastlisten = DateTimeListen };
 			db.CreateTable<track>();
 		}
 
-		public void CreateTableHistory(String ID, String TrackID, DateTime DateTimeListen, bool ListenYesNo)
+		public void CreateTableHistory(String ID, String TrackID, DateTime DateTimeListen, int ListenYesNo)
 		{
 			var db = GetConnection("ownradio.db");
-			var toHistory = new history { id = ID, trackid = TrackID, datetimelisten = DateTimeListen.ToString(), listenyesno = Convert.ToInt32(ListenYesNo) };
+			var toHistory = new history { id = ID, trackid = TrackID, datetimelisten = DateTimeListen.ToString(), listenyesno = ListenYesNo };
 			db.CreateTable<history>();
 		}
-		public void ExecuteQuery(string txtQuery)
+		public void ExecuteQuery(String txtQuery)
 		{
 			var db = GetConnection("ownradio.db");
 			//var sqlCommand = db.CreateCommand(txtQuery);
@@ -76,9 +76,9 @@ namespace OwnRadio
 			db.Close();
 		}
 
-		public void AddStatusToDB(String ID, String TrackID, bool ListenYesNo, DateTime DateTimeListen)
+		public void AddStatusToDB(String ID, String TrackID, int ListenYesNo, DateTime DateTimeListen)
 		{
-			string txtSQLQuery = "INSERT INTO history (id, trackid, datetimelisten, listenyesno) VALUES ('" + ID + "," + TrackID + "," + DateTimeListen.ToString() + "," + Convert.ToInt32(ListenYesNo) + "')";
+			string txtSQLQuery = "INSERT INTO history (id, trackid, datetimelisten, listenyesno) VALUES ('" + ID + "," + TrackID + "," + DateTimeListen.ToString() + "," + ListenYesNo + "')";
 			ExecuteQuery(txtSQLQuery);
 		}
 
@@ -88,9 +88,9 @@ namespace OwnRadio
 			ExecuteQuery(txtSQLQuery);
 		}
 
-		public void UpdateHistory(String TrackID, String DateTimeListen, bool ListenYesNo)
+		public void UpdateHistory(String TrackID, String DateTimeListen, int ListenYesNo)
 		{
-			string txtSQLQuery = "UPDATE history SET datetimelisten = '" + DateTimeListen.ToString() + "', listenyesno = '" + Convert.ToInt32(ListenYesNo) + "' WHERE id = '" + TrackID + "'";
+			string txtSQLQuery = "UPDATE history SET datetimelisten = '" + DateTimeListen.ToString() + "', listenyesno = '" + ListenYesNo + "' WHERE id = '" + TrackID + "'";
 			ExecuteQuery(txtSQLQuery);
 		}
 

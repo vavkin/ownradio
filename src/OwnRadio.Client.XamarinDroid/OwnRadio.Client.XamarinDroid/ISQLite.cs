@@ -16,13 +16,13 @@ namespace OwnRadio
 {
 	public interface ISQLite
 	{
-		SQLiteConnection GetConnection(string filename);
-		void CreateTableTrack(String ID, string DateTimeListen);
-		void CreateTableHistory(String ID, String TrackID, DateTime DateTimeListen, bool ListenYesNo);
-		void ExecuteQuery(string txtQuery);
-		void AddStatusToDB(String DeviceID, String TrackID, bool ListenYesNo, DateTime DateTimeListen);
+		SQLiteConnection GetConnection(String filename);
+		void CreateTableTrack(String ID, String DateTimeListen);
+		void CreateTableHistory(String ID, String TrackID, DateTime DateTimeListen, int ListenYesNo);
+		void ExecuteQuery(String txtQuery);
+		void AddStatusToDB(String DeviceID, String TrackID, int ListenYesNo, DateTime DateTimeListen);
 		void AddTrackToDB(String TrackID, DateTime DateTimeListen);
-		void UpdateHistory(String TrackID, String DateTimeListen, bool ListenYesNo);
+		void UpdateHistory(String TrackID, String DateTimeListen, int ListenYesNo);
 		String ShowTable(String tableName);
 	}
 }

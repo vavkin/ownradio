@@ -22,7 +22,7 @@ namespace OwnRadio
 		String GUID = "-1";//for the 1st request
 		String DeviceID = "297f55b4-d42c-4e30-b9d7-a802e7b7eed9";
 		String Method = "новых"; // сделать список имеющихся
-		bool ListedTillTheEnd = false;
+		int ListedTillTheEnd = -1;
 		MediaPlayer	Player = new MediaPlayer();
 		ISetStatusTrack StatusTrack = new StatusTrack();
 		ISQLite db = new SQLite_Android();
@@ -90,14 +90,12 @@ namespace OwnRadio
 				IGetTrack Track = new Track();
 				try
 				{
-					GUID = NextTrack.GetNextTrackID(DeviceID, GUID, Method, ListedTillTheEnd);
-
+					GUID = NextTrack.GetNextTrackID(DeviceID, out Method);
 					if (File.Exists(FileName))
 					{
 						File.Delete(FileName);
 					}
-
-					FileName = Track.GetTrack(GUID);
+					FileName = Track.GetTrackByID(GUID);
 					Toast.MakeText(this, "SetDataSource", ToastLength.Short).Show();
 					PlayerExistFlag = true;
 					Player.Reset();
@@ -166,7 +164,7 @@ namespace OwnRadio
 			PlayerExistFlag = false;
 			if (Player.IsPlaying)
 				Player.Stop();
-			ListedTillTheEnd = false;
+			ListedTillTheEnd = -1;
 			StatusTrack.SetStatusTrack(DeviceID, GUID, ListedTillTheEnd, DateTime.Now);
 			TrackPlay();
 		}
@@ -175,7 +173,7 @@ namespace OwnRadio
 		{
 			Toast.MakeText(this, "Запущена следующая песня", ToastLength.Short).Show();
 			PlayerExistFlag = false;
-			ListedTillTheEnd = true;
+			ListedTillTheEnd = 1;
 			StatusTrack.SetStatusTrack(DeviceID, GUID, ListedTillTheEnd, DateTime.Now);
 			TrackPlay();
 		}
