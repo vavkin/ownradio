@@ -42,13 +42,13 @@ namespace OwnRadio.Web.Api.Controllers
 		}
 
 		// Устанавливает статус прослушивания трека
-		// GET api/track/GetNextTrackID/12345678-1234-1234-1234-123456789012
+		// GET api/track/SetStatusTrack/12345678-1234-1234-1234-123456789012,12345678-1234-1234-1234-123456789012,1,19.09.2016 9:32
 		[HttpGet("{DeviceID},{trackID},{IsListen},{DateTimeListen}")]
-		public int SetStatusTrack(Guid DeviceID, Guid TrackID, int IsListen, DateTime DateTimeListen)
+		public int SetStatusTrack(Guid DeviceID, Guid TrackID, int IsListen, string DateTimeListen)
 		{
 			// Получаем путь к треку
 			var track = new Track(settings.connectionString);
-			var rowsCount = track.SetStatusTrack(DeviceID, TrackID, IsListen, DateTimeListen);
+			var rowsCount = track.SetStatusTrack(DeviceID, TrackID, IsListen, DateTime.Parse(DateTimeListen));
 			return rowsCount;
 		}
 	}

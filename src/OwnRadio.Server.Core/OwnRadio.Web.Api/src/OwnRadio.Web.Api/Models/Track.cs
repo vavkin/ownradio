@@ -85,7 +85,7 @@ namespace OwnRadio.Web.Api.Models
 				// Открываем соединение
 				npgSqlConnection.Open();
 				// Выполняем хранимую процедуру (функцию)
-				rowCount = (int)npgSqlCommand.ExecuteNonQuery();
+				rowCount = npgSqlCommand.ExecuteNonQuery();
 			}
 			return rowCount;
 		}
