@@ -73,7 +73,7 @@ namespace OwnRadio
 			var textName = FindViewById<EditText>(Resource.Id.EditTextName);
 			ISharedPreferences preferences = PreferenceManager.GetDefaultSharedPreferences(this);
 			var editor = preferences.Edit();
-			editor.PutString("UserName", textName.ToString());
+			editor.PutString("UserName", textName.Text);
 			editor.Commit();
 		}
 
@@ -112,11 +112,10 @@ namespace OwnRadio
 					};
 					Player.Prepare();
 					Player.Completion += Player_Completion;
-
 					MediaMetadataRetriever mMediaMetaDataRetriever = new MediaMetadataRetriever();
 					mMediaMetaDataRetriever.SetDataSource(FileName);
-					String titleName = mMediaMetaDataRetriever.ExtractMetadata(MediaMetadataRetriever.MetadataKeyTitle);
-					String artistName = mMediaMetaDataRetriever.ExtractMetadata(MediaMetadataRetriever.MetadataKeyArtist);
+					String titleName = mMediaMetaDataRetriever.ExtractMetadata(MetadataKey.Title);
+					String artistName = mMediaMetaDataRetriever.ExtractMetadata(MetadataKey.Artist);
 					if (titleName == null) titleName = "Unknown";
 					if (artistName == null) artistName = "Unknown";
 					trackInfo.Text += artistName + " - " + titleName + "\n";
