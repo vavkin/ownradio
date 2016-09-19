@@ -242,6 +242,52 @@ ALTER FUNCTION registertrack(uuid, character varying, character varying, uuid)
 ----------------------------------------------------------------------------------------	
 ----------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------	
-  
+-- Function: getnexttrackid(uuid)
+
+-- DROP FUNCTION getnexttrackid(uuid);
+
+CREATE OR REPLACE FUNCTION getnexttrackid(deviceid uuid)
+  RETURNS uuid AS
+$BODY$
+
+-- get next track id for user by device 
+
+SELECT id 
+	FROM track 
+	ORDER BY RANDOM()
+	LIMIT 1
+
+$BODY$
+  LANGUAGE sql VOLATILE
+  COST 100;
+ALTER FUNCTION getnexttrackid(uuid)
+  OWNER TO postgres;
+----------------------------------------------------------------------------------------	
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------	
+-- Function: setstatustrack(uuid, uuid, integer, timestamp with time zone)
+
+-- DROP FUNCTION setstatustrack(uuid, uuid, integer, timestamp with time zone);
+
+CREATE OR REPLACE FUNCTION setstatustrack(
+    deviceid uuid,
+    trackid uuid,
+    islisten integer,
+    datetimelisten timestamp with time zone)
+  RETURNS void AS
+$BODY$
+
+INSERT INTO history(userid, trackid, listendatetime, islisten)
+VALUES((SELECT userid FROM device WHERE id=deviceid LIMIT 1), trackid, datetimelisten, islisten);
+
+$BODY$
+  LANGUAGE sql VOLATILE
+  COST 100;
+ALTER FUNCTION setstatustrack(uuid, uuid, integer, timestamp with time zone)
+  OWNER TO postgres;
+----------------------------------------------------------------------------------------	
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------	
+ 
 INSERT INTO ownuser (id, username) VALUES ('12345678-1234-1234-1234-123456789012', 'Test User');
 INSERT INTO device (id, userid, devicename) VALUES ('00000000-0000-0000-0000-000000000000', '12345678-1234-1234-1234-123456789012', 'TEST-USER-PC');
