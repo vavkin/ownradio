@@ -276,15 +276,19 @@ CREATE OR REPLACE FUNCTION setstatustrack(
     datetimelisten timestamp with time zone)
   RETURNS void AS
 $BODY$
+-- Устанавливает статус прослушивания трека: добавляет запись в таблицу статистики и обновляет рейтинг
 
 INSERT INTO history(userid, trackid, listendatetime, islisten)
 VALUES((SELECT userid FROM device WHERE id=deviceid LIMIT 1), trackid, datetimelisten, islisten);
+
+UPDATE public.rating SET rating=rating+islisten,lastlistendatetime=datetimelisten WHERE trackid=trackid;
 
 $BODY$
   LANGUAGE sql VOLATILE
   COST 100;
 ALTER FUNCTION setstatustrack(uuid, uuid, integer, timestamp with time zone)
   OWNER TO postgres;
+
 ----------------------------------------------------------------------------------------	
 ----------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------	
