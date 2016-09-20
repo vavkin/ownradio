@@ -14,7 +14,6 @@ namespace OwnRadio
 {
 	public interface IGetNextTrackID
 	{
-		String GetNextTrackID(String DeviceID, String GUID, String Method, bool ListedTillTheEnd);
-
+		String GetNextTrackID(String DeviceID, out String Method);
 	}
 }

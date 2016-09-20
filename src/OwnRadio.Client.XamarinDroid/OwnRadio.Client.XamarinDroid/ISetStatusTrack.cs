@@ -14,6 +14,6 @@ namespace OwnRadio
 {
 	public interface ISetStatusTrack
 	{
-		void SetStatusTrack(String DeviceID, String TrackID, bool ListenYesNo, DateTime DateTimeListen);
+		void SetStatusTrack(String DeviceID, String TrackID, int IsListen, DateTime DateTimeListen);
 	}
 }

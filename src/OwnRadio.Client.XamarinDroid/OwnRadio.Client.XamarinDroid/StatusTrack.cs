@@ -16,10 +16,12 @@ namespace OwnRadio
 	{
 		public StatusTrack() { }
 
-		public void SetStatusTrack(String DeviceID, String TrackID, bool ListenYesNo, DateTime DateTimeListen)
+		public void SetStatusTrack(String DeviceID, String TrackID, int IsListen, DateTime DateTimeListen)
 		{
-			ISQLite db = new SQLite_Android();
-			db.AddStatusToDB(DeviceID, TrackID, ListenYesNo, DateTimeListen);
+			//ISQLite db = new SQLite_Android();
+			//db.AddStatusToDB(DeviceID, TrackID, ListenYesNo, DateTimeListen);
+			//Uri URLRequest = new Uri("http://10.10.0.45:5000/api/track/SetStatusTrack/" + DeviceID + "," + TrackID + "," + IsListen + "," + DateTimeListen.ToString()); 
+
 		}
 	}
 }
