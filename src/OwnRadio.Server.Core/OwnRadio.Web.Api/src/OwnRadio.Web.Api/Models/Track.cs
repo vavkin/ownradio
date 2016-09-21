@@ -30,7 +30,7 @@ namespace OwnRadio.Web.Api.Models
 				// Уточняем тип комманды - хранимая процедура
 				npgSqlCommand.CommandType = CommandType.StoredProcedure;
 				// Добавляем параметры
-				npgSqlCommand.Parameters.AddWithValue("trackid", trackID);
+				npgSqlCommand.Parameters.AddWithValue("i_trackid", trackID);
 				// Открываем соединение
 				npgSqlConnection.Open();
 				// Выполняем хранимую процедуру (функцию)
@@ -54,7 +54,7 @@ namespace OwnRadio.Web.Api.Models
 				// Уточняем тип комманды - хранимая процедура
 				npgSqlCommand.CommandType = CommandType.StoredProcedure;
 				// Добавляем параметры
-				npgSqlCommand.Parameters.AddWithValue("deviceid", deviceID);
+				npgSqlCommand.Parameters.AddWithValue("i_deviceid", deviceID);
 				// Открываем соединение
 				npgSqlConnection.Open();
 				// Выполняем хранимую процедуру (функцию)
@@ -78,10 +78,10 @@ namespace OwnRadio.Web.Api.Models
 				// Уточняем тип комманды - хранимая процедура
 				npgSqlCommand.CommandType = CommandType.StoredProcedure;
 				// Добавляем параметры
-				npgSqlCommand.Parameters.AddWithValue("deviceid", DeviceID);
-				npgSqlCommand.Parameters.AddWithValue("trackid", TrackID);
-				npgSqlCommand.Parameters.AddWithValue("islisten", IsListen);
-				npgSqlCommand.Parameters.AddWithValue("datetimelisten", DateTimeListen);
+				npgSqlCommand.Parameters.AddWithValue("i_deviceid", DeviceID);
+				npgSqlCommand.Parameters.AddWithValue("i_trackid", TrackID);
+				npgSqlCommand.Parameters.AddWithValue("i_islisten", IsListen);
+				npgSqlCommand.Parameters.AddWithValue("i_datetimelisten", DateTimeListen);
 				// Открываем соединение
 				npgSqlConnection.Open();
 				// Выполняем хранимую процедуру (функцию)

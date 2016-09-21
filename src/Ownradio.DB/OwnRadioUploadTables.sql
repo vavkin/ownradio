@@ -161,7 +161,7 @@ CREATE TABLE rating
   userid uuid NOT NULL,
   trackid uuid NOT NULL,
   lastlistendatetime timestamp with time zone NOT NULL DEFAULT now(),
-  rating integer NOT NULL DEFAULT 0,
+  ratingsum integer NOT NULL DEFAULT 0,
   CONSTRAINT pk_rating PRIMARY KEY (id),
   CONSTRAINT fk_rating_track FOREIGN KEY (trackid)
       REFERENCES track (id) MATCH SIMPLE
@@ -204,10 +204,10 @@ CREATE INDEX fki_rating_user
 -- DROP FUNCTION registertrack(uuid, character varying, character varying, uuid);
 
 CREATE OR REPLACE FUNCTION registertrack(
-    trackid uuid,
-    localdevicepathupload character varying,
-    path character varying,
-    userid uuid)
+    i_trackid uuid,
+    i_localdevicepathupload character varying,
+    i_path character varying,
+    i_userid uuid)
   RETURNS void AS
 $BODY$
 -- 
@@ -217,21 +217,21 @@ $BODY$
 --
 
 -- Добавляем пользователя, если его еще не существует
-INSERT INTO ownuser (id,username)
-SELECT userid, 'Anonymous new user'
-WHERE NOT EXISTS(SELECT * FROM ownuser WHERE id=userid);
+INSERT INTO ownuser (id, username)
+	SELECT i_userid, 'Anonymous new user'
+		WHERE NOT EXISTS(SELECT * FROM ownuser WHERE id = i_userid);
 
 -- Добавляем трек в базу данных
 INSERT INTO track(id, localdevicepathupload, path, uploaduserid) 
-VALUES(trackid, localdevicepathupload, path, userid);
+	VALUES(i_trackid, i_localdevicepathupload, i_path, i_userid);
 
 -- Добавляем запись о прослушивании трека в таблицу истории прослушивания
-INSERT INTO history(userid,trackid)
-VALUES(userid,trackid);
+INSERT INTO history(userid, trackid, islisten)
+	VALUES(i_userid, i_trackid, 1);
 
 -- Добавляем запись в таблицу рейтингов
-INSERT INTO rating(userid, trackid, rating)
-VALUES(userid, trackid, 1);
+INSERT INTO rating(userid, trackid, ratingsum)
+	VALUES(i_userid, i_trackid, 1);
 
 $BODY$
   LANGUAGE sql VOLATILE
@@ -246,12 +246,20 @@ ALTER FUNCTION registertrack(uuid, character varying, character varying, uuid)
 
 -- DROP FUNCTION getnexttrackid(uuid);
 
-CREATE OR REPLACE FUNCTION getnexttrackid(deviceid uuid)
+CREATE OR REPLACE FUNCTION getnexttrackid(i_deviceid uuid)
   RETURNS uuid AS
 $BODY$
 
--- get next track id for user by device 
+-- Получает id следующего трэка для пользователя по DeviceID
 
+
+-- Добавляем устройство, если его еще не существует
+INSERT INTO device (id, userid, devicename)
+	SELECT i_deviceid, '12345678-1234-1234-1234-123456789012', 'Test user device'
+		WHERE NOT EXISTS(SELECT id FROM device WHERE id = i_deviceid);
+
+
+-- На данный момент возвращает случайный id трэка
 SELECT id 
 	FROM track 
 	ORDER BY RANDOM()
@@ -270,28 +278,51 @@ ALTER FUNCTION getnexttrackid(uuid)
 -- DROP FUNCTION setstatustrack(uuid, uuid, integer, timestamp with time zone);
 
 CREATE OR REPLACE FUNCTION setstatustrack(
-    deviceid uuid,
-    trackid uuid,
-    islisten integer,
-    datetimelisten timestamp with time zone)
+    i_deviceid uuid,
+    i_trackid uuid,
+    i_islisten integer,
+    i_datetimelisten timestamp with time zone)
   RETURNS void AS
 $BODY$
+
 -- Устанавливает статус прослушивания трека: добавляет запись в таблицу статистики и обновляет рейтинг
 
 INSERT INTO history(userid, trackid, listendatetime, islisten)
-VALUES((SELECT userid FROM device WHERE id=deviceid LIMIT 1), trackid, datetimelisten, islisten);
+VALUES((SELECT userid FROM device WHERE id=i_deviceid LIMIT 1), i_trackid, i_datetimelisten, i_islisten);
 
-UPDATE public.rating SET rating=rating+islisten,lastlistendatetime=datetimelisten WHERE trackid=trackid;
+UPDATE rating SET ratingsum=ratingsum + i_islisten,lastlistendatetime=i_datetimelisten WHERE trackid=i_trackid AND userid IN (SELECT userid FROM device WHERE id=i_deviceid LIMIT 1);
 
 $BODY$
   LANGUAGE sql VOLATILE
   COST 100;
 ALTER FUNCTION setstatustrack(uuid, uuid, integer, timestamp with time zone)
   OWNER TO postgres;
-
+  
 ----------------------------------------------------------------------------------------	
 ----------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------	
- 
+-- Function: gettrackpathbyid(uuid)
+
+-- DROP FUNCTION gettrackpathbyid(uuid);
+
+CREATE OR REPLACE FUNCTION gettrackpathbyid(i_trackid uuid)
+  RETURNS character varying AS
+$BODY$
+
+-- Возвращает путь к треку с заданным идентификатором 
+
+SELECT path 
+	FROM track
+	WHERE id = i_trackid
+
+$BODY$
+  LANGUAGE sql VOLATILE
+  COST 100;
+ALTER FUNCTION gettrackpathbyid(uuid)
+  OWNER TO postgres;
+----------------------------------------------------------------------------------------	
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------	
+
 INSERT INTO ownuser (id, username) VALUES ('12345678-1234-1234-1234-123456789012', 'Test User');
 INSERT INTO device (id, userid, devicename) VALUES ('00000000-0000-0000-0000-000000000000', '12345678-1234-1234-1234-123456789012', 'TEST-USER-PC');

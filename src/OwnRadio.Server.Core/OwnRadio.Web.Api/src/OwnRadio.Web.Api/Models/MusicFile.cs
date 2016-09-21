@@ -37,10 +37,10 @@ namespace OwnRadio.Web.Api.Models
 				// Уточняем тип комманды - хранимая процедура
 				npgSqlCommand.CommandType = CommandType.StoredProcedure;
 				// Добавляем параметры
-				npgSqlCommand.Parameters.AddWithValue("trackid", id);
-				npgSqlCommand.Parameters.AddWithValue("localdevicepathupload", localDevicePathUpload);
-				npgSqlCommand.Parameters.AddWithValue("path", path);
-				npgSqlCommand.Parameters.AddWithValue("userid", userId);
+				npgSqlCommand.Parameters.AddWithValue("i_trackid", id);
+				npgSqlCommand.Parameters.AddWithValue("i_localdevicepathupload", localDevicePathUpload);
+				npgSqlCommand.Parameters.AddWithValue("i_path", path);
+				npgSqlCommand.Parameters.AddWithValue("i_userid", userId);
 				// Открываем соединение
 				npgSqlConnection.Open();
 				// Выполняем хранимую процедуру (функцию)
