@@ -11,7 +11,7 @@ using System.IO;
 
 namespace OwnRadio.Client.Droid
 {
-    [Activity(Label = "OwnRadio.Client", Icon = "@drawable/icon", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "OwnRadio", Icon = "@drawable/icon", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsApplicationActivity
     {
         MediaPlayer Player = new MediaPlayer();

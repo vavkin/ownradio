@@ -22,17 +22,29 @@ namespace OwnRadio.Client.Droid
     class TrackPlay : ITrackPlay
     {
         String GUID = "-1";//for the 1st request
-        String DeviceID;// = "297f55b4-d42c-4e30-b9d7-a802e7b7eed9";
-        String Method = "новых"; // сделать список имеющихся
         int ListedTillTheEnd = -1;
-
+        bool PlayerExistFlag = false;
         MediaPlayer Player = new MediaPlayer();
+        String Method = "новых";
+        String DeviceID;
+        String FileName;
+        ISetStatusTrack StatusTrack = new StatusTrack();
 
-        public void CurrentTrackPlay(bool PlayerExistFlag, String FileName)
+        public void CurrentTrackPlay()
         {
+            DeviceID = CrossSettings.Current.GetValueOrDefault<Guid>("DeviceID", Guid.NewGuid()).ToString();
+
             if (!PlayerExistFlag)
             {
-
+                IGetNextTrackID nextTrack = new NextTrackID();
+                GUID = nextTrack.GetNextTrackID(DeviceID, out Method);
+                if (File.Exists(FileName))
+                {
+                    File.Delete(FileName);
+                }
+                IGetTrack track = new Track();
+                FileName = track.GetTrackByID(GUID);
+                PlayerExistFlag = true;
                 try
                 {
                     Player.Reset();
@@ -99,35 +111,34 @@ namespace OwnRadio.Client.Droid
 
         public void NextTrackPlay()
         {
-            //PlayerExistFlag = false;
+            PlayerExistFlag = false;
             if (Player.IsPlaying)
                 Player.Stop();
             ListedTillTheEnd = -1;
-
+            CurrentTrackPlay();
             //история прослушивания
-            //try
-            //{
-            //    StatusTrack.SetStatusTrack(DeviceID, GUID, ListedTillTheEnd, DateTime.Now);
-            //}
-            //catch (Exception ex)
-            //{
-            //    status.Text += ex.Message + "\n";
-            //}
+            try
+            {
+                StatusTrack.SetStatusTrack(DeviceID, GUID, ListedTillTheEnd, DateTime.Now);
+            }
+            catch (Exception ex)
+            {
+            }
         }
 
         private void Player_Completion(object sender, EventArgs e)
         {
-            //PlayerExistFlag = false;
+            PlayerExistFlag = false;
             ListedTillTheEnd = 1;
+            CurrentTrackPlay();
             //история прослушивания
-            //try
-            //{
-            //    StatusTrack.SetStatusTrack(DeviceID, GUID, ListedTillTheEnd, DateTime.Now);
-            //}
-            //catch (Exception ex)
-            //{
-            //}
-            //TrackPlay();
+            try
+            {
+                StatusTrack.SetStatusTrack(DeviceID, GUID, ListedTillTheEnd, DateTime.Now);
+            }
+            catch (Exception ex)
+            {
+            }
         }
     }
 

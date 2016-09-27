@@ -34,11 +34,21 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>ownradio.keystore</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="IGetNextTrackID.cs" />
     <Compile Include="IGetTrack.cs" />
+    <Compile Include="ISetStatusTrack.cs" />
     <Compile Include="ITrackPlay.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -72,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="GettingStarted.Xamarin" />
+    <None Include="ownradio.keystore" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

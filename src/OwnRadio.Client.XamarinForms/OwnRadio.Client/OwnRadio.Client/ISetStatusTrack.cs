@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace OwnRadio.Client
 {
-    public interface ITrackPlay
+    public interface ISetStatusTrack
     {
-        void CurrentTrackPlay();
-        void NextTrackPlay();
+        void SetStatusTrack(String DeviceID, String TrackID, int IsListen, DateTime DateTimeListen);
     }
 }

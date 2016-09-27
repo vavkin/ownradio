@@ -18,6 +18,11 @@ namespace OwnRadio.Client
 
         public App()
         {
+            //CrossSettings.Current.Remove("DeviceID");
+            //Guid guidID = Guid.NewGuid();
+            //CrossSettings.Current.AddOrUpdateValue("DeviceID", guidID);
+            //DeviceID = CrossSettings.Current.GetValueOrDefault<Guid>("DeviceID").ToString();
+
             DeviceID = CrossSettings.Current.GetValueOrDefault<Guid>("DeviceID", Guid.NewGuid()).ToString();
             MainPage = new MainPage();
             Button buttonPlay = MainPage.FindByName<Button>("ButtonPlay");
@@ -28,40 +33,15 @@ namespace OwnRadio.Client
             buttonNext.Clicked += ButtonNext_Clicked;
         }
 
-        public void CPTrackPlay()
-        {
-            if (!PlayerExistFlag)
-            {
-                try
-                {
-                    //if (File.Exists(FileName))
-                    //{
-                    //    File.Delete(FileName);
-                    //}
-
-                   GUID = DependencyService.Get<IGetNextTrackID>().GetNextTrackID(DeviceID, out Method);
-                   FileName = DependencyService.Get<IGetTrack>().GetTrackByID(GUID);
-
-                   PlayerExistFlag = true;
-                }
-                catch (Exception ex)
-                {
-                    PlayerExistFlag = false;
-                }
-            }
-            DependencyService.Get<ITrackPlay>().CurrentTrackPlay(PlayerExistFlag, FileName);
-        }
-
         private void ButtonPlay_Clicked(object sender, EventArgs e)
         {
-            CPTrackPlay();
+            DependencyService.Get<ITrackPlay>().CurrentTrackPlay(/*DeviceID, PlayerExistFlag,FileName, Method */);
         }
 
         private void ButtonNext_Clicked(object sender, EventArgs e)
         {
-            PlayerExistFlag = false;
             DependencyService.Get<ITrackPlay>().NextTrackPlay();
-            CPTrackPlay();
+            DependencyService.Get<ITrackPlay>().CurrentTrackPlay();
         }
 
         protected override void OnStart()
