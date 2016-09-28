@@ -37,16 +37,17 @@ namespace OwnRadio.Client.Droid
             if (!PlayerExistFlag)
             {
                 IGetNextTrackID nextTrack = new NextTrackID();
-                GUID = nextTrack.GetNextTrackID(DeviceID, out Method);
-                if (File.Exists(FileName))
-                {
-                    File.Delete(FileName);
-                }
-                IGetTrack track = new Track();
-                FileName = track.GetTrackByID(GUID);
-                PlayerExistFlag = true;
+
                 try
                 {
+                    GUID = nextTrack.GetNextTrackID(DeviceID, out Method);
+                    if (File.Exists(FileName))
+                    {
+                        File.Delete(FileName);
+                    }
+                    IGetTrack track = new Track();
+                    FileName = track.GetTrackByID(GUID);
+                    PlayerExistFlag = true;
                     Player.Reset();
                     if (File.Exists(FileName) == false)
                     {
@@ -128,6 +129,9 @@ namespace OwnRadio.Client.Droid
 
         private void Player_Completion(object sender, EventArgs e)
         {
+            //Высвобождение ресурсов текущего MediaPlayer'а и создание нового для корректной работы события Completion
+            Player.Release();
+            Player = new MediaPlayer();
             PlayerExistFlag = false;
             ListedTillTheEnd = 1;
             CurrentTrackPlay();

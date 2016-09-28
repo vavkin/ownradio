@@ -10,21 +10,18 @@ namespace OwnRadio.Client
 {
     public class App : Application
     {
-        bool PlayerExistFlag = false; // выбрана ли песня
-        String FileName;
-        String GUID = "-1";//for the 1st request
         String DeviceID;
-        String Method = "новых"; 
 
         public App()
         {
-            //CrossSettings.Current.Remove("DeviceID");
-            //Guid guidID = Guid.NewGuid();
-            //CrossSettings.Current.AddOrUpdateValue("DeviceID", guidID);
-            //DeviceID = CrossSettings.Current.GetValueOrDefault<Guid>("DeviceID").ToString();
-
-            DeviceID = CrossSettings.Current.GetValueOrDefault<Guid>("DeviceID", Guid.NewGuid()).ToString();
             MainPage = new MainPage();
+            DeviceID = CrossSettings.Current.GetValueOrDefault<Guid>("DeviceID").ToString();
+            if (DeviceID == "00000000-0000-0000-0000-000000000000")
+            {
+                CrossSettings.Current.AddOrUpdateValue("DeviceID", Guid.NewGuid());
+                DeviceID = CrossSettings.Current.GetValueOrDefault<Guid>("DeviceID").ToString();
+            }
+
             Button buttonPlay = MainPage.FindByName<Button>("ButtonPlay");
             Button buttonNext = MainPage.FindByName<Button>("ButtonNext");
             Label labelDeviceID = MainPage.FindByName<Label>("LabelDeviceID");
