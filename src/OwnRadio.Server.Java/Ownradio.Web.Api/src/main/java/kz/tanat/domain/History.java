@@ -2,36 +2,33 @@ package kz.tanat.domain;
 
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
-import java.util.Calendar;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import java.util.Date;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class History {
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(name = "ID", unique = true)
-    private String id;
+public class History extends AbstractEntity {
 
-    @Column(name = "UserID", nullable = false)
+    @Column(nullable = false)
     private String userId;
 
-    @Column(name = "TrackID", nullable = false)
+    @Column(nullable = false)
     private String trackId;
 
-    @DateTimeFormat(pattern = "MM/dd/yyyy")
-    @Column(name = "LastListenDateTime", nullable = false)
-    private Calendar lastListenDateTime;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @Column(nullable = false)
+    private Date lastListen;
 
-    @Column(name = "ListenYesNo")
-    private boolean listenYesNo;
+    @Column(nullable = false)
+    private boolean listen;
 
 }

@@ -12,7 +12,8 @@ public class Application {
 	public static void main(String[] args) {
 		final ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
 
-		if ("dev".equals(context.getEnvironment().getActiveProfiles()[0])) {
+		if (context.getEnvironment().getActiveProfiles().length > 0 &&
+				"dev".equals(context.getEnvironment().getActiveProfiles()[0])) {
 			log.info("Open in browser: " + context.getEnvironment().getProperty("this-url"));
 		}
 	}

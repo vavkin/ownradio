@@ -1,27 +1,23 @@
 package kz.tanat.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Track {
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(name = "ID", unique = true)
-    private String id;
+public class Track extends AbstractEntity {
 
-    @Column(name = "Path")
     private String path;
 
-    @Column(name = "UploadUserID", nullable = false)
+    @Column(nullable = false)
     private String uploadUserId;
 
 }

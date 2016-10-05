@@ -5,14 +5,11 @@ import kz.tanat.repository.TrackRepository;
 import kz.tanat.util.ResourceFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.metamodel.SingularAttribute;
-import java.io.Serializable;
 import java.util.List;
 
 @Service
@@ -38,6 +35,7 @@ public class TrackService {
             return null;
         }
 
+        // HACK: Возвращаем одну запись
         return tracks.get(0).getId();
     }
 
