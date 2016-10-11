@@ -1,4 +1,11 @@
-﻿using Npgsql;
+﻿// Компания "Нетвокс Лаб"
+// ExecuteProcedurePostgreSQL.cs
+// Класс ExecuteProcedurePostgreSQL - Класс выполнения хранимых процедур базы данных PostgreSQL (Модель)
+// Осуществляет вызов хранимой процедуры с переданными параметрами
+// Александра Полунина
+// Создан:  2016-10-11 10:43
+// Изменен: 2016-10-11 16:00
+using Npgsql;
 using System;
 using System.Data;
 

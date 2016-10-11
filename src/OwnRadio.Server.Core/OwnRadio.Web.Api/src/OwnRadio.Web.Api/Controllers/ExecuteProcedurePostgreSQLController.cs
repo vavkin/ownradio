@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// Компания "Нетвокс Лаб"
+// ExecuteProcedurePostgreSQLController.cs
+// Контроллер класса ExecuteProcedurePostgreSQL.
+// Получает параметры в GET запросе и передает их в функцию для запуска хранимой процедуры базы данных
+// Александра Полунина
+// Создан:  2016-10-11 10:43
+// Изменен: 2016-10-11 16:00
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using OwnRadio.Web.Api.Infrastructure;
 using OwnRadio.Web.Api.Models;
 using System;
-using System.Net;
-
-// For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace OwnRadio.Web.Api.Controllers
 {
