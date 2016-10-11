@@ -65,7 +65,7 @@ namespace OwnRadio.Client.Desktop.ViewModel
             try
             {
                 GetNextTrack();
-                Player.Play();
+                Play();
             }
             catch (Exception exception)
             {
