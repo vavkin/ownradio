@@ -285,18 +285,34 @@ CREATE OR REPLACE FUNCTION setstatustrack(
   RETURNS void AS
 $BODY$
 
+BEGIN
 -- Устанавливает статус прослушивания трека: добавляет запись в таблицу статистики и обновляет рейтинг
 
 INSERT INTO history(userid, trackid, listendatetime, islisten)
 VALUES((SELECT userid FROM device WHERE id=i_deviceid LIMIT 1), i_trackid, i_datetimelisten, i_islisten);
 
-UPDATE rating SET ratingsum=ratingsum + i_islisten,lastlistendatetime=i_datetimelisten WHERE trackid=i_trackid AND userid IN (SELECT userid FROM device WHERE id=i_deviceid LIMIT 1);
+-- Обновляем рейтинг трека и дату его последнего прослушивания, если указанный пользователь уже слушал этот трек
+UPDATE rating 
+SET ratingsum = ratingsum + i_islisten, lastlistendatetime = i_datetimelisten 
+WHERE id = (SELECT id FROM rating WHERE trackid=i_trackid AND userid IN (SELECT userid FROM device WHERE id=i_deviceid LIMIT 1));
+
+-- Если таблица была обновлена - выход из функции, иначе - добавим запись
+IF found THEN
+RETURN;
+END IF;
+
+-- Добавляем новую запись о прослушивании трека пользователем, если трек слушается пользователем впервые
+INSERT INTO rating (userid, trackid, lastlistendatetime, ratingsum) 
+SELECT (SELECT userid FROM device WHERE id=i_deviceid LIMIT 1), i_trackid, i_datetimelisten, i_islisten
+WHERE NOT EXISTS (SELECT id FROM rating WHERE trackid=i_trackid AND userid IN (SELECT userid FROM device WHERE id=i_deviceid LIMIT 1));
+END;
 
 $BODY$
-  LANGUAGE sql VOLATILE
+  LANGUAGE plpgsql VOLATILE
   COST 100;
 ALTER FUNCTION setstatustrack(uuid, uuid, integer, timestamp with time zone)
   OWNER TO postgres;
+
   
 ----------------------------------------------------------------------------------------	
 ----------------------------------------------------------------------------------------
@@ -352,28 +368,16 @@ UPDATE track SET uploaduserid = i_useridnew WHERE uploaduserid = i_useridold;
 -- Заменяем старый ID пользователя на новый в таблице history
 UPDATE history SET userid = i_useridnew WHERE userid = i_useridold;
 
--- Суммируем рейтинг треков, прослушанных пользователем 
-WITH res AS (SELECT trackid AS track, SUM(ratingsum) AS rating, MAX(lastlistendatetime) AS time
-  FROM (SELECT trackid, ratingsum, lastlistendatetime FROM rating 
-	WHERE userid = i_useridold OR userid = i_useridnew) AS res1
-	GROUP BY trackid)
+-- Удаляем записи, связанные с i_useridold или userid = i_useridnew из таблицы рейтинг
+DELETE FROM rating WHERE userid = i_useridold OR userid = i_useridnew;
+
+-- Добавляем в таблицу рейтинг статистику прослушиваний посчитанную по таблице история
 INSERT INTO rating (userid, trackid, lastlistendatetime, ratingsum)
-	SELECT i_useridnew, res.track, res.time, res.rating 
-FROM res
-WHERE NOT EXISTS (SELECT trackid FROM rating WHERE trackid = res.track AND userid = i_useridnew);
-
-WITH res3 AS (SELECT trackid AS track, SUM(ratingsum) AS rating, MAX(lastlistendatetime) AS time
-  FROM (SELECT trackid, ratingsum, lastlistendatetime FROM rating 
-	WHERE userid = i_useridold OR userid = i_useridnew) AS res1
-	GROUP BY trackid)
-UPDATE rating SET ratingsum = res3.rating, lastlistendatetime = res3.time
-FROM res3
-WHERE rating.trackid = res3.track AND userid = i_useridnew;
-
--- Удаляем дублирующиеся записи, относящиеся к старому UserID
-DELETE FROM rating WHERE userid = i_useridold;
-
+	SELECT i_useridnew, trackid, MAX(listendatetime), SUM(islisten) FROM history
+		WHERE userid = i_useridold OR userid = i_useridnew
+		GROUP BY trackid;
 END;
+
 
 $BODY$
   LANGUAGE plpgsql VOLATILE
@@ -397,14 +401,17 @@ $BODY$
 
 BEGIN
 
+-- Если ID устройства еще нет в БД
+IF NOT EXISTS(SELECT id FROM device WHERE id = i_deviceid) THEN
+
 -- Добавляем нового пользователя
 INSERT INTO ownuser (id, username)
 	VALUES(uuid_generate_v1mc(), i_username);
 
--- Добавляем устройство, если его еще не существует или обновляем данные
+-- Добавляем новое устройство
 INSERT INTO device (id, userid, devicename)
-	SELECT i_deviceid, (SELECT id FROM ownuser WHERE username = i_username), i_devicename
-		WHERE NOT EXISTS(SELECT id FROM device WHERE id = i_deviceid);
+	SELECT i_deviceid, (SELECT id FROM ownuser WHERE username = i_username), i_devicename;
+END IF;
 
 END;
 
@@ -449,7 +456,7 @@ CREATE OR REPLACE FUNCTION public.getuserid(i_deviceid uuid)
 $BODY$
 
 -- Получает ID пользователя по DeviceID
-SELECT id FROM ownuser WHERE id = (SELECT userid FROM device WHERE id = i_deviceid);
+SELECT userid FROM device WHERE id = i_deviceid;
 
 $BODY$
   LANGUAGE sql VOLATILE
