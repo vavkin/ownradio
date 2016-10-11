@@ -5,15 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OwnRadio.Client.Desktop"
         mc:Ignorable="d"
-        Title="Own radio" Height="100.981" Width="525" ResizeMode="NoResize" Icon="Resources/icon.png">
-    <Grid Margin="0,0,0,5">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="472*"/>
-            <ColumnDefinition Width="45*"/>
-        </Grid.ColumnDefinitions>
-        <MediaElement x:Name="mediaElement" Height="22" Margin="443,10,0,0" VerticalAlignment="Top" LoadedBehavior="Manual"  MediaFailed="mediaElement_MediaFailed" HorizontalAlignment="Left" Width="64" MediaEnded="mediaElement_MediaEnded" Grid.ColumnSpan="2"/>
-        <Button x:Name="btnPlayPause" Content="Pause" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="btnPlayPause_Pause" Margin="10,10,0,0"/>
-        <Button x:Name="btnNext" Content="Next" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="btnNext_Click" Margin="90,10,0,0"/>
-        <TextBlock x:Name="statusText" HorizontalAlignment="Left" Margin="10,37,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="497" Grid.ColumnSpan="2" Height="19"/>
-    </Grid>
+        Title="Own radio" Height="40" SnapsToDevicePixels="True" Background="Transparent" Width="525" WindowStyle="None" AllowsTransparency="True" Icon="Resources/icon.png">
+    <Border Name="OuterBorder" CornerRadius="20" Padding="5,0,5,0">
+        <Border.Background>
+            <LinearGradientBrush>
+                <GradientStop Color="#444444" Offset="0.1"></GradientStop>
+                <GradientStop Color="#666666" Offset="0.3"></GradientStop>
+                <GradientStop Color="#666666" Offset="0.8"></GradientStop>
+                <GradientStop Color="#444444" Offset="1"></GradientStop>
+            </LinearGradientBrush>
+        </Border.Background>
+        <StackPanel VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal">
+                <ToggleButton></ToggleButton>
+                <Button Style="{Binding Source={StaticResource NextButton}}"></Button>
+                <StackPanel Orientation="Horizontal" Width="380" ClipToBounds="True" Margin="20,0,20,0">
+                    <Canvas x:Name="Canvas" VerticalAlignment="Center" Height="20">
+                        <TextBlock></TextBlock>
+                    </Canvas>
+                </StackPanel>
+                <Button Name="BtnClose" Style="{Binding Source={StaticResource CloseButton}}"></Button>
+            </StackPanel>
+        </StackPanel>
+    </Border>
 </Window>
