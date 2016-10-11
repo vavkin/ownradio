@@ -51,46 +51,5 @@ namespace OwnRadio.Web.Api.Controllers
 			var rowsCount = track.SetStatusTrack(DeviceID, TrackID, IsListen, DateTime.Parse(DateTimeListen));
 			return rowsCount;
 		}
-
-        //Выполняет слияние статистики прослушивания треков на разных устройствах по двум User ID одного пользователя
-        // GET api/track/MergeUserID/12345678-1234-1234-1234-123456789012,12345678-1234-1234-1234-123456789012
-        [HttpGet("{userIDOld},{userIDNew}")]
-        public int MergeUserID(Guid userIDOld, Guid userIDNew)
-        {
-            // Получаем путь к треку
-            var track = new Track(settings.connectionString);
-            var rowsCount = track.MergeUserID(userIDOld, userIDNew);
-            return rowsCount;
-        }
-
-        //Сохраняет нового пользователя и устройство
-        // GET api/track/RegisterDevice/12345678-1234-1234-1234-123456789012,UserName,DeviceName
-        [HttpGet("{deviceID},{userName},{deviceName}")]
-        public int RegisterDevice(Guid deviceID, String userName, String deviceName)
-        {
-            // Получаем путь к треку
-            var track = new Track(settings.connectionString);
-            var rowsCount = track.RegisterDevice(deviceID, userName, deviceName);
-            return rowsCount;
-        }
-
-        //Получает ID пользователя по DeviceID
-        [HttpGet("{deviceID}")]
-        public Guid GetUserId(Guid deviceID)
-        {
-            var track = new Track(settings.connectionString);
-            return track.GetUserId(deviceID);
-        }
-
-        //Переименовывает пользователя
-        // GET api/track/RenameUser/12345678-1234-1234-1234-123456789012,NewUserName
-        [HttpGet("{userID},{newUserName}")]
-        public int RenameUser(Guid userID, String newUserName)
-        {
-            // Получаем путь к треку
-            var track = new Track(settings.connectionString);
-            var rowsCount = track.RenameUser(userID, newUserName);
-            return rowsCount;
-        }
     }
 }
