@@ -55,6 +55,7 @@ namespace OwnRadio.Client.Desktop
 			int rowsAffected = 0;
 			try
 			{
+				log.Debug("Сохраняем файл " + musicFile.fileName);
 				// Открываем соединение
 				connection.Open();
 				// Сохраняем запись
@@ -83,6 +84,7 @@ namespace OwnRadio.Client.Desktop
 			var count = 0;
 			try
 			{
+				log.Debug("Проверяем наличие в БД файла " + fileName);
 				// Формируем строку запроса
 				var commandSQL = string.Format("SELECT count(*) FROM Files WHERE FileName LIKE '{0}'", fileName);
 				// Создаем команду
@@ -104,6 +106,7 @@ namespace OwnRadio.Client.Desktop
 			var files = new List<MusicFile>();
 			try
 			{
+				log.Debug("Получаем список не загруженных файлов");
 				// Открываем соединение
 				connection.Open();
 				// Формируем строку запроса
@@ -140,6 +143,7 @@ namespace OwnRadio.Client.Desktop
 			int count = 0;
 			try
 			{
+				log.Debug("Помечаем загруженным файл " + musicFile.fileName);
 				// Открываем соединение
 				connection.Open();
 				// Формируем строку запроса

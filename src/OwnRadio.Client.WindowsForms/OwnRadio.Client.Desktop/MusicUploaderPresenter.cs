@@ -53,9 +53,9 @@ namespace OwnRadio.Client.Desktop
 						// Создаем объект - файл
 						var musicFile = new MusicFile();
 						// Получаем имя файла
-						musicFile.fileName = Path.GetFileName(file);
+						musicFile.fileName = Path.GetFileName(file).Replace("'","`");
 						// Получаем относительный путь
-						musicFile.filePath = Path.GetDirectoryName(file);
+						musicFile.filePath = Path.GetDirectoryName(file).Replace("'", "`");
 						// Присваиваем файлу идентификатор
 						musicFile.fileGuid = Guid.NewGuid();
 						if (dal.addToQueue(musicFile) > 0)
@@ -77,14 +77,17 @@ namespace OwnRadio.Client.Desktop
 		{
 			try
 			{
+				log.Debug("Сканируем папку " + sourceDirectory);
 				var allFiles = Directory.EnumerateFiles(sourceDirectory);
 				// Оставляем только mp3
 				var musicFiles = allFiles.Where(s => s.Split('.')[s.Split('.').Count() - 1].ToLower().Equals("mp3"));
 				// добавляем все mp3 файлы в список
 				filenames.AddRange(musicFiles);
-
+				log.Debug("Добавлено файлов: " + musicFiles.Count());
+				log.Debug("Получаем список папок в папке: " + sourceDirectory);
 				// получаем список папок в текущей папке
 				var dirs = Directory.EnumerateDirectories(sourceDirectory);
+				log.Debug("В текущей папке найдено вложенных папок: " + dirs.Count());
 				// рекурсивно получаем список файлов и проходим вложенные папки
 				foreach (var directory in dirs)
 					getMusicFiles(directory, ref filenames);
