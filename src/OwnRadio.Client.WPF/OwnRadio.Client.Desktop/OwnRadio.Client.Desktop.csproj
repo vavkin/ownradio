@@ -68,7 +68,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Track.cs" />
+    <Compile Include="Model\Track.cs" />
+    <Compile Include="ViewModel\Commands\NextCommand.cs" />
+    <Compile Include="ViewModel\Commands\PauseCommand.cs" />
+    <Compile Include="ViewModel\Commands\PlayCommand.cs" />
+    <Compile Include="ViewModel\ViewModelPlayer.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

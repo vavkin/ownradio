@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace OwnRadio.Client.Desktop
+namespace OwnRadio.Client.Desktop.Model
 {
     /// <summary>
     /// Class keeps info about single track
