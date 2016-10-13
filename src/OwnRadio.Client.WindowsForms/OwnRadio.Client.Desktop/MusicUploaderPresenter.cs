@@ -53,9 +53,9 @@ namespace OwnRadio.Client.Desktop
 						// Создаем объект - файл
 						var musicFile = new MusicFile();
 						// Получаем имя файла
-						musicFile.fileName = Path.GetFileName(file).Replace("'","`");
+						musicFile.fileName = Path.GetFileName(file);
 						// Получаем относительный путь
-						musicFile.filePath = Path.GetDirectoryName(file).Replace("'", "`");
+						musicFile.filePath = Path.GetDirectoryName(file);
 						// Присваиваем файлу идентификатор
 						musicFile.fileGuid = Guid.NewGuid();
 						if (dal.addToQueue(musicFile) > 0)

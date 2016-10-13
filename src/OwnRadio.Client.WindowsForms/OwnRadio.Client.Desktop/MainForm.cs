@@ -110,7 +110,7 @@ namespace OwnRadio.Client.Desktop
 					item.ForeColor = Color.Green;
 				// Возобновляем возможность нажимать кнопку загрузки, если есть что загружать.
 				toolStripButtonUpload.Enabled = (listViewFiles.Items.Count > 0);
-				textBoxLog.Text += "Добавлен файл " + file.fileName + Environment.NewLine;
+				textBoxLog.Text = "Добавлен файл " + file.fileName + Environment.NewLine + textBoxLog.Text;
 			}
 			catch (Exception ex)
 			{

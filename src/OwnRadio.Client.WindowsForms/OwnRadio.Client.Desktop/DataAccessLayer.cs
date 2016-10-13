@@ -62,9 +62,12 @@ namespace OwnRadio.Client.Desktop
 				if (!exist(musicFile.fileName)) // которая не была сохранена ранее
 				{
 					// Формируем строку запроса
-					var commandSQL = string.Format("INSERT INTO Files (ID, FileName, SubPath) VALUES ('{0}', '{1}', '{2}')", musicFile.fileGuid, musicFile.fileName, musicFile.filePath);
+					var commandSQL = string.Format("INSERT INTO Files (ID, FileName, SubPath) VALUES ($fileGuid, $fileName, $filePath)");
 					// Создаем команду
 					SQLiteCommand cmd = new SQLiteCommand(commandSQL, connection);
+					cmd.Parameters.AddWithValue("$fileGuid", musicFile.fileGuid.ToString());
+					cmd.Parameters.AddWithValue("$fileName", musicFile.fileName);
+					cmd.Parameters.AddWithValue("$filePath", musicFile.filePath);
 					// выполняем команду
 					rowsAffected += cmd.ExecuteNonQuery();
 				}
@@ -86,9 +89,10 @@ namespace OwnRadio.Client.Desktop
 			{
 				log.Debug("Проверяем наличие в БД файла " + fileName);
 				// Формируем строку запроса
-				var commandSQL = string.Format("SELECT count(*) FROM Files WHERE FileName LIKE '{0}'", fileName);
+				var commandSQL = string.Format("SELECT count(*) FROM Files WHERE FileName LIKE $fileName");
 				// Создаем команду
 				SQLiteCommand cmd = new SQLiteCommand(commandSQL, connection);
+				cmd.Parameters.AddWithValue("$fileName", fileName);
 				// Получаем количество записей
 				var result = cmd.ExecuteScalar();
 				count = Convert.ToInt16(result);
@@ -147,9 +151,10 @@ namespace OwnRadio.Client.Desktop
 				// Открываем соединение
 				connection.Open();
 				// Формируем строку запроса
-				string commandSQL = string.Format("UPDATE Files SET Uploaded=1 WHERE ID LIKE '{0}'", musicFile.fileGuid);
+				string commandSQL = string.Format("UPDATE Files SET Uploaded=1 WHERE ID LIKE $fileGuid");
 				// Создаем команду
 				SQLiteCommand cmd = new SQLiteCommand(commandSQL, connection);
+				cmd.Parameters.AddWithValue("$fileGuid", musicFile.fileGuid.ToString());
 				// Получаем количество записей
 				var result = cmd.ExecuteScalar();
 				// Закрываем соединение
