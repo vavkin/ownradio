@@ -43,8 +43,6 @@
 			this.PathFromFolder = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.folderBrowserDialogMain = new System.Windows.Forms.FolderBrowserDialog();
 			this.textBoxLog = new System.Windows.Forms.TextBox();
-			this.toolStripButtonPlay = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonNext = new System.Windows.Forms.ToolStripButton();
 			this.toolStripMain.SuspendLayout();
 			this.SuspendLayout();
 			// 
