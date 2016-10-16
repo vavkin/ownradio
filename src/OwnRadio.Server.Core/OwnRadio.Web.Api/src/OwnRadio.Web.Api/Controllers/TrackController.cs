@@ -51,5 +51,5 @@ namespace OwnRadio.Web.Api.Controllers
 			var rowsCount = track.SetStatusTrack(DeviceID, TrackID, IsListen, DateTime.Parse(DateTimeListen));
 			return rowsCount;
 		}
-	}
+    }
 }

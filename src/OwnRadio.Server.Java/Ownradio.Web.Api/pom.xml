@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>kz.tanat</groupId>
-    <artifactId>webservice</artifactId>
+    <artifactId>ownradio</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>WebService</name>
-    <description>Demo project for Spring Boot</description>
+    <name>OwnRadio</name>
+    <description>Серверная часть системы OwnRadio</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
