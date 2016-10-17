@@ -6,6 +6,7 @@
              StartupUri="MainWindow.xaml" Startup="Application_Startup">
     <Application.Resources>
         <viewModel:ViewModelPlayer x:Key="ViewModelPlayer"/>
+        <viewModel:ViewModelUploader x:Key="ViewModelUploader"/>
 
         <Style x:Key="MainButtonStyle" TargetType="ButtonBase">
             <Setter Property="Width" Value="30"></Setter>
@@ -102,6 +103,30 @@
                             <Grid>
                                 <Polyline StrokeThickness="3" Points="2,2 12,12" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 <Polyline StrokeThickness="3" Points="12,2 2,12" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="UploadButton" TargetType="Button" BasedOn="{StaticResource MainButtonStyle}">
+            <Setter Property="Command" Value="{Binding UploadCommand, Source={StaticResource ViewModelUploader}}"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Grid Cursor="Hand">
+                            <Ellipse>
+                                <Ellipse.Fill>
+                                    <LinearGradientBrush>
+                                        <GradientStop Color="CornflowerBlue" Offset="0.2"></GradientStop>
+                                        <GradientStop Color="RoyalBlue" Offset="0.9"></GradientStop>
+                                    </LinearGradientBrush>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <Grid>
+                                <Polygon Fill="White" Points="0,12 5,6 10,12" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                                <Rectangle Fill="White" Height="12" Width="4" HorizontalAlignment="Center" VerticalAlignment="Center"></Rectangle>
                             </Grid>
                         </Grid>
                     </ControlTemplate>

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OwnRadio.Client.Desktop"
         mc:Ignorable="d"
-        Title="Own radio" Height="40" SnapsToDevicePixels="True" Background="Transparent" Width="525" WindowStyle="None" AllowsTransparency="True" Icon="Resources/icon.png">
+        Title="Own radio" Height="40" SnapsToDevicePixels="True" Background="Transparent" Width="560" WindowStyle="None" AllowsTransparency="True" Icon="Resources/icon.png">
     <Border Name="OuterBorder" CornerRadius="20" Padding="5,0,5,0">
         <Border.Background>
             <LinearGradientBrush>
@@ -24,6 +24,7 @@
                         <TextBlock></TextBlock>
                     </Canvas>
                 </StackPanel>
+                <Button Name="BtnUpload" Style="{Binding Source={StaticResource UploadButton}}"></Button>
                 <Button Name="BtnClose" Style="{Binding Source={StaticResource CloseButton}}"></Button>
             </StackPanel>
         </StackPanel>
