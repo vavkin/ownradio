@@ -24,7 +24,7 @@
                         <TextBlock></TextBlock>
                     </Canvas>
                 </StackPanel>
-                <Button Name="BtnUpload" Style="{Binding Source={StaticResource UploadButton}}"></Button>
+                <ToggleButton Name="BtnUpload" Style="{Binding Source={StaticResource UploadButton}}"></ToggleButton>
                 <Button Name="BtnClose" Style="{Binding Source={StaticResource CloseButton}}"></Button>
             </StackPanel>
         </StackPanel>

@@ -110,8 +110,10 @@
             </Setter>
         </Style>
 
-        <Style x:Key="UploadButton" TargetType="Button" BasedOn="{StaticResource MainButtonStyle}">
+        <Style x:Key="UploadButton" TargetType="ToggleButton" BasedOn="{StaticResource MainButtonStyle}">
+            <Setter Property="Foreground" Value="Black"></Setter>
             <Setter Property="Command" Value="{Binding UploadCommand, Source={StaticResource ViewModelUploader}}"></Setter>
+            <Setter Property="IsChecked" Value="{Binding IsUploading, Source={StaticResource ViewModelUploader}}"></Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate>
@@ -132,6 +134,28 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="ToolTip" Value="Upload"></Setter>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Grid Cursor="Hand">
+                                    <Ellipse>
+                                        <Ellipse.Fill>
+                                            <LinearGradientBrush>
+                                                <GradientStop Color="CornflowerBlue" Offset="0.2"></GradientStop>
+                                                <GradientStop Color="RoyalBlue" Offset="0.9"></GradientStop>
+                                            </LinearGradientBrush>
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+                                    <TextBlock Text="{Binding Status, Source={StaticResource ViewModelUploader}}" FontSize="10" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
         <Style TargetType="TextBlock">
